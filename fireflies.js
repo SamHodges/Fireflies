@@ -1,5 +1,4 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
-const svg = document.querySelector("#firefly-visual");
 
 function synchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
@@ -12,6 +11,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 	this.y = 0; 
 	this.step = 0;
 	this.totalSteps = 0;
+	this.line = null;
 
 
 	this.initialize = function(){
@@ -37,6 +37,9 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
         // make sure circle is in front of everything
         this.circle.setAttributeNS(null, "z-index", "3");
 
+        // append to svg
+        this.svg.appendChild(this.circle);
+
         // create the line tracker
         this.line = document.createElementNS(SVG_NS, "line");
 
@@ -53,8 +56,11 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
         // bring it to the front
         this.line.setAttributeNS(null, "z-index", "3");
 
+        // append to svg
+        this.svg.appendChild(this.line);
+
 		// set interval call for update
-		setInterval(update, this.updateTiming); 
+		 setInterval(this.update(this.line), this.updateTiming); 
 	}
 
 	this.calcCenter = function(){
@@ -68,17 +74,23 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		this.y = this.cy;
 	}
 
-	this.update = function(){
+	this.update = function(line){
 		// calculate percentage through circle
 		circlePercent = this.step / this.totalSteps;
 
 		// calculate where that is on circle
-		this.x = r * Math.sin(2 * Math.PI * circlePercent) + cx;
-  		this.y = r * Math.cos(2 * Math.PI * circlePercent) + cy;
+		this.x = this.radius * Math.sin(2 * Math.PI * circlePercent) + this.cx;
+  		this.y = this.radius * Math.cos(2 * Math.PI * circlePercent) + this.cy;
 
 		// update line
-		this.line.setAttributeNS(null, "x2", this.x);
-        this.line.setAttributeNS(null, "y2", this.y);
+		line.setAttributeNS(null, "x2", this.x);
+        line.setAttributeNS(null, "y2", this.y);
 	}
 
+}
+
+function drawFireflies(){
+	const svg = document.querySelector("#firefly-visual");
+	const synchCircle = new synchronizationCircle(100, 100, svg);
+	synchCircle.initialize();
 }

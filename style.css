@@ -18,6 +18,8 @@ p {
 }
 
 #firefly-visual{
+	width: 800px;
+	height: 500px;
 	margin: auto;
 }
 

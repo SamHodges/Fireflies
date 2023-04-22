@@ -5,6 +5,15 @@ body{
 h1{
 	text-align: center;
 	color: white;
+	font-family: "Freestyle Script", "Lucida Calligraphy", "Georgia", "Arial";
+	font-size: 70px;
+	margin-bottom: 20px;
 }
 
+p {
+	color: white;
+	margin-left: 10%;
+	margin-right: 10%;
+	font-family: "Merriweather", "Montserrat", "Helvetica", "Georgia", "Arial";
+}
 

@@ -1,4 +1,5 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
+const testSVG = document.querySelector("#firefly-visual");
 
 function synchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
@@ -17,6 +18,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 	this.initialize = function(){
 		// get center of svg and set (x,y) accordingly
 		this.calcCenter();
+		console.log("center at " + this.cx + ", " + this.cy);
 
 		// calculate how many total steps in circle
 		this.totalSteps = this.duration / this.updateTiming;
@@ -30,7 +32,8 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		this.circle.setAttributeNS(null, "r", this.radius);
 
 		// clear circle with white edges
-		this.circle.setAttributeNS(null, "fill-opacity", 0);
+		//this.circle.setAttributeNS(null, "fill-opacity", 0);
+		this.circle.setAttributeNS(null, "fill", "#FFFFFF");
 		this.circle.setAttributeNS(null, "stroke", "#FFFFFF")
         this.circle.setAttributeNS(null, "stroke-width", "2");
 
@@ -39,6 +42,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 
         // append to svg
         this.svg.appendChild(this.circle);
+        console.log("placed circle");
 
         // create the line tracker
         this.line = document.createElementNS(SVG_NS, "line");
@@ -58,7 +62,8 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 
         // append to svg
         this.svg.appendChild(this.line);
-
+        console.log("placed line");
+        
 		// set interval call for update
 		 setInterval(this.update(this.line), this.updateTiming); 
 	}
@@ -75,12 +80,15 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 	}
 
 	this.update = function(line){
+		console.log("new update!");
+
 		// calculate percentage through circle
 		circlePercent = this.step / this.totalSteps;
 
 		// calculate where that is on circle
 		this.x = this.radius * Math.sin(2 * Math.PI * circlePercent) + this.cx;
   		this.y = this.radius * Math.cos(2 * Math.PI * circlePercent) + this.cy;
+  		console.log("new x,y: " + this.x + ", " + this.y);
 
 		// update line
 		line.setAttributeNS(null, "x2", this.x);

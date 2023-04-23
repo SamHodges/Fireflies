@@ -97,8 +97,48 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 
 }
 
+/*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
+let timeOfDay = null;
+//^ will be used in the fireflies method to determine light emission
+
+function environment(){
+	//gets the daytime button and changes the background of the screen
+	addEventListener("click", dayTime());
+	this.dayTime = function(){
+		var ev = document.getElementById("day");
+		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: aliceblue');
+		timeOfDay = 'dayTime';
+	}
+	
+	//midday
+	addEventListener("click", midDay());
+
+	this.midDay = function(){
+		var ev = document.getElementById("midDay");
+		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: #87CEEB');
+		timeOfDay = 'midDay';
+	}
+
+	//nighttime
+	addEventListener("click", nightTime());
+
+	this.nightTime = function(){
+		var ev = document.getElementById("nightTime");
+		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: #00008B');
+		timeOfDay = 'nightTime';
+	}
+
+	/*adding fireflies*/
+
+	/*removing fireflies*/
+
+}
+
+/*and i added a comment at the end of drawingFireflies to clarify timeOfDay's use irt light emission*/
+
 function drawFireflies(){
 	const svg = document.querySelector("#firefly-visual");
 	const synchCircle = new synchronizationCircle(100, 100, svg);
 	synchCircle.initialize();
+	//if timeOfDay is string 'nightTime', emit light
 }

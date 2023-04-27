@@ -1,27 +1,33 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 const testSVG = document.querySelector("#firefly-visual");
 
-function synchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
+function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
 	this.radius = synchronizationRadius;
 	this.duration = synchronizationDuration;
-	this.updateTiming = 500;
+	this.updateTiming = 50;
 	this.cx = 0;
-	this.cy =0;
+	this.cy = 0;
 	this.x = 0;
 	this.y = 0; 
 	this.step = 0;
 	this.totalSteps = 0;
 	this.line = null;
 
-
 	this.initialize = function(){
+
 		// get center of svg and set (x,y) accordingly
 		this.calcCenter();
 		console.log("center at " + this.cx + ", " + this.cy);
 
 		// calculate how many total steps in circle
-		this.totalSteps = this.duration / this.updateTiming;
+		//this.totalSteps = this.duration / this.updateTiming;
+		/*why are we doing this? I'm just going to make it a constant
+		for now so the basic code works. If you want it to step according
+		to how often it updates so it moves at a constant speed, then updateTiming
+		should be the variable, not the constant. And also the math should be different.
+							-Leland */
+		this.totalSteps = 360;
 
 		// initialize circle
 		this.circle = document.createElementNS(SVG_NS, "circle");
@@ -33,10 +39,10 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 
 		// clear circle with white edges
 		//this.circle.setAttributeNS(null, "fill-opacity", 0);
-		this.circle.setAttributeNS(null, "fill", "#FFFFFF");
+		this.circle.setAttributeNS(null, "fill", "#000000");
 		this.circle.setAttributeNS(null, "stroke", "#FFFFFF")
         this.circle.setAttributeNS(null, "stroke-width", "2");
-
+  
         // make sure circle is in front of everything
         this.circle.setAttributeNS(null, "z-index", "3");
 
@@ -63,9 +69,24 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
         // append to svg
         this.svg.appendChild(this.line);
         console.log("placed line");
-        
-		// set interval call for update
-		 setInterval(this.update(this.line), this.updateTiming); 
+
+		/* Removed the update interval set from here, put it inside
+		the drawFireflies function because the way that setInterval works
+		requires you to provide an anonymous inner function to make a function
+		call with any arguments, and you can't use the this keyword in an anonymous
+		inner function, so I moved it outside to where I could use
+		the created object. 
+			I was also thinking- shouldn't update update all the lines globally? Why
+		does it take a parameter? I think update probably shouldn't even
+		be in the circle code. Since it's just a circle, it doesn't
+		need to be an object. (i.e. have methods). The circle function 
+		could just set up the graphical parameters of the circle and return,
+		and then your update can be elsewhere and you don't even need and initialize function anymore
+		because your constructor already initializes everything.
+			I would highly recommend this.
+			If you're writing a function named "initialize" as a static property
+		"initialized" in your constructor, then that code can just be part of the constructor code.
+					-Leland*/
 	}
 
 	this.calcCenter = function(){
@@ -80,7 +101,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 	}
 
 	this.update = function(line){
-		console.log("new update!");
+		//console.log("new update!");
 
 		// calculate percentage through circle
 		circlePercent = this.step / this.totalSteps;
@@ -88,57 +109,101 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		// calculate where that is on circle
 		this.x = this.radius * Math.sin(2 * Math.PI * circlePercent) + this.cx;
   		this.y = this.radius * Math.cos(2 * Math.PI * circlePercent) + this.cy;
-  		console.log("new x,y: " + this.x + ", " + this.y);
+  		//console.log("new x,y: " + this.x + ", " + this.y);
 
 		// update line
 		line.setAttributeNS(null, "x2", this.x);
         line.setAttributeNS(null, "y2", this.y);
-	}
 
+		//This way your update actually changes each time
+		//<3 - Leland
+		this.step = (this.step + 1 % this.totalSteps);
+	}
+	
 }
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
-let timeOfDay = null;
-//^ will be used in the fireflies method to determine light emission
 
-function environment(){
-	//gets the daytime button and changes the background of the screen
-	addEventListener("click", dayTime());
-	this.dayTime = function(){
-		var ev = document.getElementById("day");
-		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: aliceblue');
-		timeOfDay = 'dayTime';
-	}
+let fireflies = [];
+
+function Firefly(startX, startY, svg){
+
+	const radius = 3;
+
+	this.circle = document.createElementNS(SVG_NS, "circle");
 	
-	//midday
-	addEventListener("click", midDay());
+	// set center
+	this.circle.setAttributeNS(null, "cx", startX);
+	this.circle.setAttributeNS(null, "cy", startY);
+	this.circle.setAttributeNS(null, "r", radius);
+	
+	//red circle
+	this.circle.setAttributeNS(null, "fill", "#FF0000");
+	this.circle.setAttributeNS(null, "stroke", "#FF0000")
+	this.circle.setAttributeNS(null, "stroke-width", "2");
+	  
+	// make sure circle is **actually** in front of everything
+	this.circle.setAttributeNS(null, "z-index", "4");
 
-	this.midDay = function(){
-		var ev = document.getElementById("midDay");
-		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: #87CEEB');
-		timeOfDay = 'midDay';
-	}
-
-	//nighttime
-	addEventListener("click", nightTime());
-
-	this.nightTime = function(){
-		var ev = document.getElementById("nightTime");
-		ev.document.getElementById("firefly-visual").setAttribute('style', 'backgroundColor: #00008B');
-		timeOfDay = 'nightTime';
-	}
-
-	/*adding fireflies*/
-
-	/*removing fireflies*/
-
+	svg.appendChild(this.circle);
 }
 
-/*and i added a comment at the end of drawingFireflies to clarify timeOfDay's use irt light emission*/
+function setMorning(){
+	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
+}
+
+function setMidday(){
+	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
+}
+
+function setNight(){
+	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
+	//start the fireflies flashing here!
+}
+
+//returns random int in the interval [start, end)
+function randRange(start, end){
+	return Math.floor(Math.random() * (end - start)) + start;
+}
+
+function addFireflies(){
+	svg = document.querySelector("#firefly-visual");
+	
+	//width = svg.width;
+	//height = svg.height;
+	//I HAVE NO IDEA WHY THIS ISN'T WORKING
+	//HARDCODING AS A STOPGAP - LELAND
+
+	//we can talk about this in/before our meeting 
+	//and if it still has relevance+ we don't have 
+	//an answer I'll take it to oren or rosenbaum - Lau
+
+	const width = 800;
+	const height = 500;
+
+	for (let i=0; i<5; i++){
+		let x = randRange(3, 798);
+		let y = randRange(3, 498);
+		fireflies.push(new Firefly(x, y, svg));
+	}
+}
+
+function removeFireflies(){
+	if(fireflies.length < 5){
+		return;
+	}
+
+	for (let i=0; i<5; i++){
+		let pos = randRange(0, fireflies.length);
+		let toDelete = fireflies.splice(pos, 1);
+		toDelete[0].circle.remove();
+	}
+}
 
 function drawFireflies(){
 	const svg = document.querySelector("#firefly-visual");
-	const synchCircle = new synchronizationCircle(100, 100, svg);
+	const synchCircle = new SynchronizationCircle(100, 100, svg);
 	synchCircle.initialize();
-	//if timeOfDay is string 'nightTime', emit light
+	// set interval call for update
+	setInterval(function() {synchCircle.update(synchCircle.line)}, synchCircle.updateTiming);
 }

@@ -1,5 +1,5 @@
 body{
-	background-color: rgb(0, 0, 0);
+	background-color: black;
 }
 
 h1{
@@ -18,8 +18,5 @@ p {
 }
 
 #firefly-visual{
-	width: 800px;
-	height: 500px;
 	margin: auto;
 }
-

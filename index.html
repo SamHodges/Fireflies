@@ -8,8 +8,13 @@
 	<script>
 		window.onload = function(){
 			drawFireflies();
+			setMidday();
 		}
 	</script>
+
+	<div class="parallax">
+
+	</div>
 
 	<h1>Fireflies</h1>
 	<audio controls>
@@ -24,10 +29,15 @@
 	</p>
 
 	<h1>Choose time of day!</h1>
-	<button id="day">Morning</button>
-	<button id="midDay">Midday</button>
-	<button id="nigthTime">Nighttime</button>
+	<button id="morning" onClick="setMorning()">Morning</button>
+	<button id="midday" onClick="setMidday()">Midday</button>
+	<button id="night" onClick="setNight()">Nighttime</button>
+	<br />
+	<button id="addFireflies" onClick="addFireflies()">Add Fireflies</button>
+	<button id="removeFireflies" onClick="removeFireflies()">Remove Fireflies</button>
 
-	<div id="firefly-visual"></div>
+	<div id="firefly-wrapper">
+		<svg id="firefly-visual" width="800" height="500"></svg>
+	</div>
 
 </html>

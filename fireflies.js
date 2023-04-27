@@ -1,27 +1,31 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
+let syncCircle = null;
 
-function synchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
+function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
+	this.maxRadius = synchronizationRadius;
 	this.radius = synchronizationRadius;
-	this.duration = synchronizationDuration;
-	this.updateTiming = 500;
+	this.minFlashTime = 12;
 	this.cx = 0;
-	this.cy =0;
-	this.x = 0;
-	this.y = 0; 
-	this.step = 0;
-	this.totalSteps = 0;
-	this.line = null;
+	this.cy = 0;
+	this.restart = true;
+	this.circle = null;
+	this.intervalTime = 50;
+	this.interval = null;
 
+	/*
+		How it should work updated:
+		Fireflies may flash up to every 12 seconds, but do it randomly. They have a max time of a few min. 
+		We don't keep track of order of flashes, so gonna get creative
+		When a firefly flashes, it calls updateCircle()
+		if >0, nothing happens (or maybe it changes color?)
+		if =0, restart the circle
+	*/
 
 	this.initialize = function(){
+
 		// get center of svg and set (x,y) accordingly
 		this.calcCenter();
-		console.log("center at " + this.cx + ", " + this.cy);
-
-		// calculate how many total steps in circle
-		// TODO: change sync circle to account for how fireflies actually work-- maybe instead of visual of how recharged they are?
-		this.totalSteps = this.duration / this.updateTiming;
 
 		// initialize circle
 		this.circle = document.createElementNS(SVG_NS, "circle");
@@ -32,41 +36,15 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		this.circle.setAttributeNS(null, "r", this.radius);
 
 		// clear circle with white edges
-		//this.circle.setAttributeNS(null, "fill-opacity", 0);
-		this.circle.setAttributeNS(null, "fill", "#FFFFFF");
+		this.circle.setAttributeNS(null, "fill-opacity", 0);
 		this.circle.setAttributeNS(null, "stroke", "#FFFFFF")
         this.circle.setAttributeNS(null, "stroke-width", "2");
-
+  
         // make sure circle is in front of everything
         this.circle.setAttributeNS(null, "z-index", "3");
 
         // append to svg
-        // TODO: figure out why circle not showing up
         this.svg.appendChild(this.circle);
-        console.log("placed circle");
-
-        // create the line tracker
-        this.line = document.createElementNS(SVG_NS, "line");
-
-        // set initial coordinates
-        this.line.setAttributeNS(null, "x1", this.cx);
-        this.line.setAttributeNS(null, "y1", this.cy);
-        this.line.setAttributeNS(null, "x2", this.x);
-        this.line.setAttributeNS(null, "y2", this.y);
-
-        // make it white
-        this.line.setAttributeNS(null, "stroke", "white");
-        this.line.setAttributeNS(null, "stroke-width", 2);
-
-        // bring it to the front
-        this.line.setAttributeNS(null, "z-index", "3");
-
-        // append to svg
-        this.svg.appendChild(this.line);
-        console.log("placed line");
-
-		// set interval call for update
-		 setInterval(this.update(this.line), this.updateTiming); 
 	}
 
 	this.calcCenter = function(){
@@ -79,27 +57,112 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		this.x = this.cx + this.radius;
 		this.y = this.cy;
 	}
+	
+}
 
-	this.update = function(line){
-		console.log("new update!");
+function startCircleUpdate(){
+	if (syncCircle.restart){
+		syncCircle.restart = false;
+		syncCircle.interval = setInterval(shrinkCircle, syncCircle.intervalTime);
+	}
+}
 
-		// calculate percentage through circle
-		circlePercent = this.step / this.totalSteps;
+function shrinkCircle(){
+	let timeDivision = syncCircle.minFlashTime * 1000 / syncCircle.intervalTime;
+	let singleStep = syncCircle.maxRadius / timeDivision
+	if (syncCircle.radius <= singleStep){
+		clearInterval(syncCircle.interval);
+		syncCircle.interval = null;
+		syncCircle.restart = true;
+		syncCircle.radius -= syncCircle.maxRadius;
+	}
+	else{
+		syncCircle.radius -= singleStep;
+		syncCircle.circle.setAttributeNS(null, "r", syncCircle.radius);
+	}
+}
 
-		// calculate where that is on circle
-		this.x = this.radius * Math.sin(2 * Math.PI * circlePercent) + this.cx;
-  		this.y = this.radius * Math.cos(2 * Math.PI * circlePercent) + this.cy;
-  		console.log("new x,y: " + this.x + ", " + this.y);
+/*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
 
-		// update line
-		line.setAttributeNS(null, "x2", this.x);
-        line.setAttributeNS(null, "y2", this.y);
+let fireflies = [];
+
+function Firefly(startX, startY, svg){
+
+	const radius = 3;
+
+	this.circle = document.createElementNS(SVG_NS, "circle");
+	
+	// set center
+	this.circle.setAttributeNS(null, "cx", startX);
+	this.circle.setAttributeNS(null, "cy", startY);
+	this.circle.setAttributeNS(null, "r", radius);
+	
+	//red circle
+	this.circle.setAttributeNS(null, "fill", "#FF0000");
+	this.circle.setAttributeNS(null, "stroke", "#FF0000")
+	this.circle.setAttributeNS(null, "stroke-width", "2");
+	  
+	// make sure circle is in front of most things
+	this.circle.setAttributeNS(null, "z-index", "2");
+	startCircleUpdate()
+
+	svg.appendChild(this.circle);
+}
+
+function setMorning(){
+	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
+}
+
+function setMidday(){
+	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
+}
+
+function setNight(){
+	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
+	//start the fireflies flashing here!
+}
+
+//returns random int in the interval [start, end)
+function randRange(start, end){
+	return Math.floor(Math.random() * (end - start)) + start;
+}
+
+function addFireflies(){
+	svg = document.querySelector("#firefly-visual");
+	
+	//width = svg.width;
+	//height = svg.height;
+	//I HAVE NO IDEA WHY THIS ISN'T WORKING
+	//HARDCODING AS A STOPGAP - LELAND
+
+	//we can talk about this in/before our meeting 
+	//and if it still has relevance+ we don't have 
+	//an answer I'll take it to oren or rosenbaum - Lau
+
+	const width = 800;
+	const height = 500;
+
+	for (let i=0; i<5; i++){
+		let x = randRange(3, 798);
+		let y = randRange(3, 498);
+		fireflies.push(new Firefly(x, y, svg));
+	}
+}
+
+function removeFireflies(){
+	if(fireflies.length < 5){
+		return;
 	}
 
+	for (let i=0; i<5; i++){
+		let pos = randRange(0, fireflies.length);
+		let toDelete = fireflies.splice(pos, 1);
+		toDelete[0].circle.remove();
+	}
 }
 
 function drawFireflies(){
 	const svg = document.querySelector("#firefly-visual");
-	const synchCircle = new synchronizationCircle(100, 100, svg);
-	synchCircle.initialize();
+	syncCircle = new SynchronizationCircle(100, 100, svg);
+	syncCircle.initialize();
 }

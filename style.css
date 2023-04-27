@@ -17,6 +17,15 @@ p {
 	font-family: "Merriweather", "Montserrat", "Helvetica", "Georgia", "Arial";
 }
 
+ol {
+	color: white;
+	margin-left: 10%;
+	margin-right: 10%;
+	font-family: "Merriweather", "Montserrat", "Helvetica", "Georgia", "Arial";
+}
+
+
+
 #firefly-visual{
 	margin: auto;
 }

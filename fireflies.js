@@ -1,5 +1,4 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
-const testSVG = document.querySelector("#firefly-visual");
 
 function synchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
@@ -21,12 +20,13 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		console.log("center at " + this.cx + ", " + this.cy);
 
 		// calculate how many total steps in circle
+		// TODO: change sync circle to account for how fireflies actually work-- maybe instead of visual of how recharged they are?
 		this.totalSteps = this.duration / this.updateTiming;
 
 		// initialize circle
 		this.circle = document.createElementNS(SVG_NS, "circle");
 
-		// set center-- TODO: query svg for sizing
+		// set center
 		this.circle.setAttributeNS(null, "cx", this.cx);
 		this.circle.setAttributeNS(null, "cy", this.cy);
 		this.circle.setAttributeNS(null, "r", this.radius);
@@ -41,6 +41,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
         this.circle.setAttributeNS(null, "z-index", "3");
 
         // append to svg
+        // TODO: figure out why circle not showing up
         this.svg.appendChild(this.circle);
         console.log("placed circle");
 
@@ -63,7 +64,7 @@ function synchronizationCircle(synchronizationDuration, synchronizationRadius, s
         // append to svg
         this.svg.appendChild(this.line);
         console.log("placed line");
-        
+
 		// set interval call for update
 		 setInterval(this.update(this.line), this.updateTiming); 
 	}

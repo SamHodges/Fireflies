@@ -91,12 +91,19 @@ function shrinkCircle(){
 
 let fireflies = [];
 
-//Initizliaing svg for fireflies — daytime, dusk, nighttime
-function Firefly(startX, startY, svg){
+function Firefly(startX, startY, svg, id){
 
 	const radius = 3;
+	// TODO: something wrong with setting id function!
+	this.fireflyID = id;
+	this.waitInterval = null;
 
-	this.circle = document.createElementNS(SVG_NS, "circle"); //Firefly appearance when not flashing
+	this.setID = function(id){
+		this.fireflyID = id;
+		console.log("setting id to " + this.fireflyID);
+	}
+
+	this.circle = document.createElementNS(SVG_NS, "circle");
 	
 	// set center
 	this.circle.setAttributeNS(null, "cx", startX);
@@ -144,7 +151,10 @@ function addFireflies(){
 	for (let i=0; i<5; i++){
 		let x = randRange(3, 798);
 		let y = randRange(3, 498);
-		fireflies.push(new Firefly(x, y, svg));
+		let newFirefly = new Firefly(x, y, svg, i)
+		fireflies.push(newFirefly);
+		newFirefly.flash();
+
 	}
 }
 

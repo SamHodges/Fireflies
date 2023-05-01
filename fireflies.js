@@ -149,7 +149,6 @@ function Firefly(startX, startY, svg){
 			console.log("Waiting!");
 			// call wait for 12 seconds
 			setTimeout(nextFlash, 12000, currentFirefly);
-
 			
 		}
 

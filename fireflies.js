@@ -130,17 +130,9 @@ function randRange(start, end){
 function addFireflies(){
 	svg = document.querySelector("#firefly-visual");
 	
-	//width = svg.width;
-	//height = svg.height;
-	//I HAVE NO IDEA WHY THIS ISN'T WORKING
-	//HARDCODING AS A STOPGAP - LELAND
-
-	//we can talk about this in/before our meeting 
-	//and if it still has relevance+ we don't have 
-	//an answer I'll take it to oren or rosenbaum - Lau
-
-	const width = 800;
-	const height = 500;
+	let rect = svg.getBoundingClientRect();
+    this.cx = rect.width/2;
+    this.cy = rect.height/2;
 
 	for (let i=0; i<5; i++){
 		let x = randRange(3, 798);

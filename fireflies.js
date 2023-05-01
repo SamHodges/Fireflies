@@ -240,10 +240,10 @@ function removeFireflies(){
 		toDelete[0].circle.remove();
 	}
 
-	setFireflyID(firflies);
+	setFireflyID(fireflies);
 }
 
-function setFireflyID(firflies){
+function setFireflyID(fireflies){
 	// console.log("SET EM UP");
 	for (let i=0; i<fireflies.length; i++){
 		// console.log(i);

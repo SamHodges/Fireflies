@@ -62,7 +62,6 @@ function SynchronizationCircle(synchronizationDuration, synchronizationRadius, s
 }
 
 function startCircleUpdate(){
-	console.log("restarting!");
 	if (syncCircle.restart){
 		syncCircle.restart = false;
 		syncCircle.interval = setInterval(shrinkCircle, syncCircle.intervalTime);
@@ -94,17 +93,16 @@ function shrinkCircle(){
 
 let fireflies = [];
 
-function Firefly(startX, startY, svg){
+function Firefly(startX, startY, svg, id){
 
 	const radius = 3;
 	// TODO: something wrong with setting id function!
-	this.fireflyID = 0;
+	this.fireflyID = id;
 	this.waitInterval = null;
 
 	this.setID = function(id){
 		this.fireflyID = id;
-		// console.log("Hi!");
-		// console.log(this.fireflyID);
+		console.log("setting id to " + this.fireflyID);
 	}
 
 	this.circle = document.createElementNS(SVG_NS, "circle");
@@ -229,7 +227,7 @@ function addFireflies(){
 	for (let i=0; i<1; i++){
 		let x = randRange(3, 798);
 		let y = randRange(3, 498);
-		let newFirefly = new Firefly(x, y, svg)
+		let newFirefly = new Firefly(x, y, svg, i)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
 	}

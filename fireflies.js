@@ -265,3 +265,41 @@ function drawFireflies(){
 	syncCircle = new SynchronizationCircle(100, 100, svg);
 	syncCircle.initialize();
 }
+
+function move(Firefly){
+
+	//choose starting point 
+	var start = newLocation();
+
+	//choose end point B
+	var end = newLocation();
+
+	//time interval between points
+
+
+	//update coordinates while moving from point A to point B
+
+	//reset once point B reached
+
+
+}
+
+function newLocation(){
+    
+    // Get viewport dimensions (remove the dimension of the div)
+    var height = $(window).height() - 50;
+    var width = $(window).width() - 50;
+    
+    var newHeight = Math.floor(Math.random() * height);
+    var newWidth = Math.floor(Math.random() * width);
+    
+    return [newHeight,newWidth];    
+}
+
+// function animateDiv(myclass){
+//     var newq = makeNewPosition();
+//     $(myclass).animate({ top: newq[0], left: newq[1] }, 1000,   function(){
+//       animateDiv(myclass);        
+//     });
+    
+// };

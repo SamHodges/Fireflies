@@ -1,8 +1,8 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 let syncCircle = null;
+let firefliesFlash = false;
 
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
-
 	this.svg = svg;
 	this.maxRadius = synchronizationRadius;
 	this.radius = synchronizationRadius;
@@ -22,8 +22,6 @@ function SynchronizationCircle(synchronizationDuration, synchronizationRadius, s
 		if >0, nothing happens (or maybe it changes color?)
 		if =0, restart the circle
 	*/
-
-	//When first firefly flashes, resets to a large circle which then decreases in size for 12 seconds until fully charged again.
 
 	this.initialize = function(){
 
@@ -50,7 +48,6 @@ function SynchronizationCircle(synchronizationDuration, synchronizationRadius, s
         this.svg.appendChild(this.circle);
 	}
 
-	//Finds center of screen
 	this.calcCenter = function(){
 		// calculate center and reset cx, cy
 		let rect = svg.getBoundingClientRect();
@@ -64,24 +61,30 @@ function SynchronizationCircle(synchronizationDuration, synchronizationRadius, s
 	
 }
 
-//Starts process, shrink circle is on the 12 second interval
 function startCircleUpdate(){
+	console.log("restarting!");
 	if (syncCircle.restart){
 		syncCircle.restart = false;
 		syncCircle.interval = setInterval(shrinkCircle, syncCircle.intervalTime);
+		syncCircle.circle.setAttributeNS(null, "r", syncCircle.maxRadius);
+		syncCircle.radius = syncCircle.maxRadius;
 	}
 }
 
 function shrinkCircle(){
+	// calculate how much to change by
 	let timeDivision = syncCircle.minFlashTime * 1000 / syncCircle.intervalTime;
 	let singleStep = syncCircle.maxRadius / timeDivision
+
+	// check if done
 	if (syncCircle.radius <= singleStep){
+		// reset interval
 		clearInterval(syncCircle.interval);
 		syncCircle.interval = null;
 		syncCircle.restart = true;
-		syncCircle.radius -= syncCircle.maxRadius;
 	}
 	else{
+		// if not, make it smaller
 		syncCircle.radius -= singleStep;
 		syncCircle.circle.setAttributeNS(null, "r", syncCircle.radius);
 	}
@@ -91,16 +94,17 @@ function shrinkCircle(){
 
 let fireflies = [];
 
-function Firefly(startX, startY, svg, id){
+function Firefly(startX, startY, svg){
 
 	const radius = 3;
 	// TODO: something wrong with setting id function!
-	this.fireflyID = id;
+	this.fireflyID = 0;
 	this.waitInterval = null;
 
 	this.setID = function(id){
 		this.fireflyID = id;
-		console.log("setting id to " + this.fireflyID);
+		// console.log("Hi!");
+		// console.log(this.fireflyID);
 	}
 
 	this.circle = document.createElementNS(SVG_NS, "circle");
@@ -120,19 +124,86 @@ function Firefly(startX, startY, svg, id){
 	startCircleUpdate()
 
 	svg.appendChild(this.circle);
+
+	this.neighborFlash = false;
+	this.waitTime;
+
+	this.flash = function(){
+		// check if right time of day
+		if (firefliesFlash) {
+			startCircleUpdate();
+
+			let currentFirefly = fireflies[this.fireflyID];
+			// flash
+			this.circle.setAttributeNS(null, "r", 10);
+			this.circle.setAttributeNS(null, "fill", "#FFFF00");
+			this.circle.setAttributeNS(null, "stroke", "#FFFF00");
+
+			setTimeout(function(currentFirefly) {
+			    console.log("flashing!");
+			    currentFirefly.circle.setAttributeNS(null, "r", 3);
+				currentFirefly.circle.setAttributeNS(null, "fill", "#FF0000");
+				currentFirefly.circle.setAttributeNS(null, "stroke", "#FF0000");
+			}, 2000, currentFirefly);
+
+			console.log("Waiting!");
+			// call wait for 12 seconds
+			setTimeout(nextFlash, 12000, currentFirefly);
+
+			
+		}
+
+		function nextFlash(currentFirefly){
+			// choose random time
+			let maxTime = 10
+			currentFirefly.waitTime = Math.floor(Math.random() * maxTime); 
+			console.log("waittime: " + currentFirefly.waitTime);
+
+			// wait for that amount of time
+			// call flash again if hasn't been triggered by neighbor
+			mainFlash(currentFirefly);
+		}
+
+		
+	}
+
+}
+
+function mainFlash(currentFirefly){
+	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
+
+	setTimeout(function() {
+			    //console.log(id);
+			}, currentFirefly.waitTime);
+}
+
+function checkNeighbors(currentFirefly){
+	// check if neighbors flash, if they do
+	console.log("waiting.... " + currentFirefly.waitTime)
+	if (currentFirefly.waitTime <= 1){
+		console.log("done!");
+		clearInterval(currentFirefly.waitInterval);
+		currentFirefly.waitInterval = null;
+		if (!currentFirefly.neighborFlash){
+			currentFirefly.flash();
+		}
+	}
+	currentFirefly.waitTime -= 1;
 }
 
 function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
+	firefliesFlash = false;
 }
 
 function setMidday(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
+	firefliesFlash = false;
 }
 
 function setNight(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
-	//start the fireflies flashing here!
+	firefliesFlash = true;
 }
 
 //returns random int in the interval [start, end)
@@ -140,25 +211,32 @@ function randRange(start, end){
 	return Math.floor(Math.random() * (end - start)) + start;
 }
 
-//Adding fireflies to screen 
 function addFireflies(){
 	svg = document.querySelector("#firefly-visual");
 	
-	let rect = svg.getBoundingClientRect();
-    this.cx = rect.width/2;
-    this.cy = rect.height/2;
+	//width = svg.width;
+	//height = svg.height;
+	//I HAVE NO IDEA WHY THIS ISN'T WORKING
+	//HARDCODING AS A STOPGAP - LELAND
 
-	for (let i=0; i<5; i++){
+	//we can talk about this in/before our meeting 
+	//and if it still has relevance+ we don't have 
+	//an answer I'll take it to oren or rosenbaum - Lau
+
+	const width = 800;
+	const height = 500;
+
+	for (let i=0; i<1; i++){
 		let x = randRange(3, 798);
 		let y = randRange(3, 498);
-		let newFirefly = new Firefly(x, y, svg, i)
+		let newFirefly = new Firefly(x, y, svg)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
-
 	}
+
+	setFireflyID(fireflies);
 }
 
-//Adding and removing five at a time
 function removeFireflies(){
 	if(fireflies.length < 5){
 		return;
@@ -169,6 +247,17 @@ function removeFireflies(){
 		let toDelete = fireflies.splice(pos, 1);
 		toDelete[0].circle.remove();
 	}
+
+	setFireflyID(firflies);
+}
+
+function setFireflyID(firflies){
+	// console.log("SET EM UP");
+	for (let i=0; i<fireflies.length; i++){
+		// console.log(i);
+		fireflies[i].setID(i);
+		// console.log(fireflies[i].fireflyID)
+	}
 }
 
 function drawFireflies(){
@@ -176,41 +265,3 @@ function drawFireflies(){
 	syncCircle = new SynchronizationCircle(100, 100, svg);
 	syncCircle.initialize();
 }
-
-function move(Firefly){
-
-	//choose starting point 
-	var start = newLocation();
-
-	//choose end point B
-	var end = newLocation();
-
-	//time interval between points
-
-
-	//update coordinates while moving from point A to point B
-
-	//reset once point B reached
-
-
-}
-
-function newLocation(){
-    
-    // Get viewport dimensions (remove the dimension of the div)
-    var height = $(window).height() - 50;
-    var width = $(window).width() - 50;
-    
-    var newHeight = Math.floor(Math.random() * height);
-    var newWidth = Math.floor(Math.random() * width);
-    
-    return [newHeight,newWidth];    
-}
-
-// function animateDiv(myclass){
-//     var newq = makeNewPosition();
-//     $(myclass).animate({ top: newq[0], left: newq[1] }, 1000,   function(){
-//       animateDiv(myclass);        
-//     });
-    
-// };

@@ -4,17 +4,12 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- multiple fireflies -- Sam
-when >1 firefly, all of them update the visual of the first, instead of their own
-
 - neighbor flashing
 add capability so that when a neighbor firefly flashes, the current firefly flashes
 
-- flash when change day to night
-right now if you add fireflies in daytime, then switch to night, they never flash
-
 - circle -> countdown with text
 people said it would be clearer if it was a countdown rather than a circle
+make sure its not in the svg, but a html element above it
 
 - better buttons
 just adding formatting/css to the buttons, maybe making the day ones like a wheel with representations of morning/night/etc
@@ -115,11 +110,12 @@ function shrinkCircle(){
 
 let fireflies = [];
 
-function Firefly(startX, startY, svg){
+function Firefly(startX, startY, svg, id){
 
 	const radius = 3;
 	// TODO: something wrong with setting id function!
-	this.fireflyID = 0;
+	this.fireflyID = id;
+	console.log("id: " + id)
 	this.waitInterval = null;
 	this.x = startX;
 	this.y = startY;
@@ -128,7 +124,7 @@ function Firefly(startX, startY, svg){
 	this.setID = function(id){
 		this.fireflyID = id;
 		// console.log("Hi!");
-		// console.log(this.fireflyID);
+		console.log(this.fireflyID);
 	}
 
 	this.circle = document.createElementNS(SVG_NS, "circle");
@@ -271,6 +267,9 @@ function setMidday(){
 function setNight(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
 	firefliesFlash = true;
+	for (let i=0; i<fireflies.length; i++){
+		fireflies[i].flash();
+	}
 }
 
 //returns random int in the interval [start, end)
@@ -296,7 +295,7 @@ function addFireflies(){
 	for (let i=0; i<1; i++){
 		let x = randRange(3, 798);
 		let y = randRange(3, 498);
-		let newFirefly = new Firefly(x, y, svg)
+		let newFirefly = new Firefly(x, y, svg, fireflies.length)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
 		newFirefly.moveEnd = newLocation();
@@ -323,7 +322,7 @@ function removeFireflies(){
 function setFireflyID(firflies){
 	// console.log("SET EM UP");
 	for (let i=0; i<fireflies.length; i++){
-		// console.log(i);
+		console.log(i);
 		fireflies[i].setID(i);
 		// console.log(fireflies[i].fireflyID)
 	}

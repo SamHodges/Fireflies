@@ -26,6 +26,12 @@ ol {
 
 
 
-#firefly-visual{
+#firefly-wrapper{
 	margin: auto;
 }
+
+#firefly-visual{
+	display: block;
+	margin: auto;
+}
+

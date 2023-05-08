@@ -4,9 +4,6 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- neighbor flashing --Sam
-add capability so that when a neighbor firefly flashes, the current firefly (almost always) flashes 
-
 - circle -> countdown with text
 people said it would be clearer if it was a countdown rather than a circle
 make sure its not in the svg, but a html element above it
@@ -97,7 +94,6 @@ function SynchronizationCircle(synchronizationDuration, synchronizationRadius, s
 }
 
 function startCircleUpdate(){
-	console.log("restarting!");
 	if (syncCircle.restart){
 		syncCircle.restart = false;
 		syncCircle.interval = setInterval(shrinkCircle, syncCircle.intervalTime);
@@ -134,7 +130,6 @@ function Firefly(startX, startY, svg, id){
 	const radius = 3;
 	// TODO: something wrong with setting id function!
 	this.fireflyID = id;
-	console.log("id: " + id)
 	this.waitInterval = null;
 	this.x = startX;
 	this.y = startY;
@@ -142,8 +137,6 @@ function Firefly(startX, startY, svg, id){
 
 	this.setID = function(id){
 		this.fireflyID = id;
-		// console.log("Hi!");
-		console.log(this.fireflyID);
 	}
 
 	this.circle = document.createElementNS(SVG_NS, "circle");
@@ -166,6 +159,7 @@ function Firefly(startX, startY, svg, id){
 
 	this.neighborFlash = false;
 	this.waitTime;
+	this.recharging = false;
 
 	this.flash = function(){
 		// check if right time of day
@@ -179,13 +173,27 @@ function Firefly(startX, startY, svg, id){
 			this.circle.setAttributeNS(null, "stroke", "#FFFF00");
 
 			setTimeout(function(currentFirefly) {
-			    console.log("flashing!");
+			    // console.log("flashing!");
+
 			    currentFirefly.circle.setAttributeNS(null, "r", 3);
 				currentFirefly.circle.setAttributeNS(null, "fill", "#FF0000");
 				currentFirefly.circle.setAttributeNS(null, "stroke", "#FF0000");
+
+				// go through fireflies and set off neighbors
+				for (let i=0; i<fireflies.length; i++){
+					let distance = Math.sqrt((currentFirefly.x - fireflies[i].x)**2 + (currentFirefly.y - fireflies[i].y)**2);
+					if (distance < 1000){
+						if (!fireflies[i].recharging) fireflies[i].neighborFlash = true;
+					}
+				}
+
+				currentFirefly.neighborFlash = false;
+				
 			}, 2000, currentFirefly);
 
-			console.log("Waiting!");
+			this.recharging = true;
+
+			// console.log("Waiting!");
 			// call wait for 12 seconds
 			setTimeout(nextFlash, 12000, currentFirefly);
 
@@ -193,10 +201,11 @@ function Firefly(startX, startY, svg, id){
 		}
 
 		function nextFlash(currentFirefly){
+			currentFirefly.recharging = false;
+
 			// choose random time
 			let maxTime = 10
 			currentFirefly.waitTime = Math.floor(Math.random() * maxTime); 
-			console.log("waittime: " + currentFirefly.waitTime);
 
 			// wait for that amount of time
 			// call flash again if hasn't been triggered by neighbor
@@ -213,7 +222,6 @@ function move(currentFirefly){
 		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1]){
 			//choose end point
 			currentFirefly.moveEnd = newLocation();
-			console.log(newLocation());
 		}
 
 		//calculate difference between them
@@ -255,20 +263,17 @@ function mainFlash(currentFirefly){
 	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
 
 	setTimeout(function() {
-			    //console.log(id);
 			}, currentFirefly.waitTime);
 }
 
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
-	console.log("waiting.... " + currentFirefly.waitTime)
-	if (currentFirefly.waitTime <= 1){
-		console.log("done!");
+	// console.log("waiting.... " + currentFirefly.waitTime);
+
+	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;
-		if (!currentFirefly.neighborFlash){
-			currentFirefly.flash();
-		}
+		currentFirefly.flash();
 	}
 	currentFirefly.waitTime -= 1;
 }
@@ -339,11 +344,8 @@ function removeFireflies(){
 }
 
 function setFireflyID(firflies){
-	// console.log("SET EM UP");
 	for (let i=0; i<fireflies.length; i++){
-		console.log(i);
 		fireflies[i].setID(i);
-		// console.log(fireflies[i].fireflyID)
 	}
 }
 

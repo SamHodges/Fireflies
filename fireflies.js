@@ -4,8 +4,8 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- neighbor flashing
-add capability so that when a neighbor firefly flashes, the current firefly flashes
+- neighbor flashing --Sam
+add capability so that when a neighbor firefly flashes, the current firefly (almost always) flashes 
 
 - circle -> countdown with text
 people said it would be clearer if it was a countdown rather than a circle
@@ -16,6 +16,25 @@ just adding formatting/css to the buttons, maybe making the day ones like a whee
 
 - control speed
 have a control to speed up/slow down fireflies using basespeed in the move interval
+
+- adding 3D
+going to have to do some math for this, since we can't use libraries
+
+- don't synchronize until 15 fireflies
+
+- let users add objects
+so they would place a plant, and that would affect whether fireflies can see each other + flash
+
+- talk more about real life data
+maybe include videos?
+
+- centering svg/make it bigger/look nicer
+
+- add more description of what the visual means for the user
+
+- user choosing where to spawn fireflies
+
+- move music to below svg
 */
 
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){

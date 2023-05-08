@@ -2,6 +2,15 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 let syncCircle = null;
 let firefliesFlash = false;
 
+/*
+TODO:
+- movement (add interval )
+- multiple fireflies
+- neighbor flashing
+- circle -> countdown with text
+- better buttons
+*/
+
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
 	this.svg = svg;
 	this.maxRadius = synchronizationRadius;
@@ -100,6 +109,9 @@ function Firefly(startX, startY, svg){
 	// TODO: something wrong with setting id function!
 	this.fireflyID = 0;
 	this.waitInterval = null;
+	this.x = startX;
+	this.y = startY;
+	this.moveEnd = 0;
 
 	this.setID = function(id){
 		this.fireflyID = id;
@@ -169,6 +181,51 @@ function Firefly(startX, startY, svg){
 
 }
 
+function move(currentFirefly){
+		console.log(currentFirefly.moveEnd);
+		// check if reached end point
+		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1]){
+			//choose end point
+			currentFirefly.moveEnd = newLocation();
+			console.log(newLocation());
+		}
+
+		//calculate difference between them
+		let diffX = currentFirefly.moveEnd[0] - currentFirefly.x;
+		let diffY = currentFirefly.moveEnd[1] - currentFirefly.y;
+		console.log("differences " + diffX + ", " + diffY);
+
+		//update coordinates while moving from point A to point B
+		let baseSpeed = 2;
+		let finalDiffX = 0;
+		if (diffX > 0){ 
+			finalDiffX = Math.min(baseSpeed, diffX);
+		}
+		else{
+			finalDiffX = Math.max(-baseSpeed, diffX);
+		}
+
+		let finalDiffY = 0;
+		if (diffY > 0){
+			finalDiffY = Math.min(baseSpeed, diffY);
+		}
+		else{
+			finalDiffY = Math.max(-baseSpeed, diffY);
+		}
+
+		currentFirefly.x += finalDiffX;
+		currentFirefly.y += finalDiffY;
+
+		currentFirefly.circle.setAttributeNS(null, "cx", currentFirefly.x);
+		currentFirefly.circle.setAttributeNS(null, "cy", currentFirefly.y);
+
+	}
+
+
+function movementInterval(currentFirefly){
+	interval = setInterval(move, 25, currentFirefly);
+}
+
 function mainFlash(currentFirefly){
 	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
 
@@ -232,6 +289,8 @@ function addFireflies(){
 		let newFirefly = new Firefly(x, y, svg)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
+		newFirefly.moveEnd = newLocation();
+		movementInterval(newFirefly);
 	}
 
 	setFireflyID(fireflies);
@@ -266,32 +325,16 @@ function drawFireflies(){
 	syncCircle.initialize();
 }
 
-function move(Firefly){
-
-	//choose starting point 
-	var start = newLocation();
-
-	//choose end point B
-	var end = newLocation();
-
-	//time interval between points
-
-
-	//update coordinates while moving from point A to point B
-
-	//reset once point B reached
-
-
-}
-
 function newLocation(){
+	console.log("New location");
     
-    // Get viewport dimensions (remove the dimension of the div)
-    var height = $(window).height() - 50;
-    var width = $(window).width() - 50;
+    // Get viewport dimensions
+    let rect = svg.getBoundingClientRect();
     
-    var newHeight = Math.floor(Math.random() * height);
-    var newWidth = Math.floor(Math.random() * width);
+    let newHeight = Math.floor(Math.random() * rect.width);
+    let newWidth = Math.floor(Math.random() * rect.height);
+
+    console.log("NEW STOOF: "+ newWidth);
     
     return [newHeight,newWidth];    
 }

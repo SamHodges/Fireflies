@@ -14,8 +14,8 @@ just adding formatting/css to the buttons, maybe making the day ones like a whee
 - control speed
 have a control to speed up/slow down fireflies using basespeed in the move interval
 
-- adding 3D
-going to have to do some math for this, since we can't use libraries
+- adding 3D -- Sam
+changing size + color?
 
 - don't synchronize until 15 fireflies
 
@@ -32,6 +32,8 @@ maybe include videos?
 - user choosing where to spawn fireflies
 
 - move music to below svg
+
+- a way to control distance radius
 */
 
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){

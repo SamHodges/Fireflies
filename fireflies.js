@@ -323,7 +323,7 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 	if(isObst == true){
 		obst = document.createElementNS(SVG_NS, 'rect');
 		obst.setAttribute("width", "10");
-		obst.setAttribute("height", "250");
+		obst.setAttribute("height", "500");
 		obst.setAttribute("y", y);
 		obst.setAttribute("x", "" + x);
 		obst.style.fill = "green";
@@ -368,7 +368,7 @@ function addFireflies(){
 	//HARDCODING AS A STOPGAP - LELAND
 
 	//we can talk about this in/before our meeting 
-	//and if it still has relevance+ we don't have 
+	//and if it still has relevance + we don't have 
 	//an answer I'll take it to oren or rosenbaum - Lau
 
 	const width = 800;

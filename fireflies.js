@@ -14,12 +14,9 @@ just adding formatting/css to the buttons, maybe making the day ones like a whee
 - control speed
 have a control to speed up/slow down fireflies using basespeed in the move interval
 
-- adding 3D -- Sam
-changing size + color?
-
 - don't synchronize until 15 fireflies
 
-- let users add objects
+- let users add objects -- Laura
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
 - talk more about real life data
@@ -127,14 +124,15 @@ function shrinkCircle(){
 
 let fireflies = [];
 
-function Firefly(startX, startY, svg, id){
+function Firefly(startX, startY, startZ, svg, id){
 
-	const radius = 3;
+	this.radius = 20;
 	// TODO: something wrong with setting id function!
 	this.fireflyID = id;
 	this.waitInterval = null;
 	this.x = startX;
 	this.y = startY;
+	this.z = startZ;
 	this.moveEnd = 0;
 
 	this.setID = function(id){
@@ -146,11 +144,11 @@ function Firefly(startX, startY, svg, id){
 	// set center
 	this.circle.setAttributeNS(null, "cx", startX);
 	this.circle.setAttributeNS(null, "cy", startY);
-	this.circle.setAttributeNS(null, "r", radius);
+	this.circle.setAttributeNS(null, "r", this.radius/startZ);
 	
 	//red circle
-	this.circle.setAttributeNS(null, "fill", "#FF0000");
-	this.circle.setAttributeNS(null, "stroke", "#FF0000")
+	this.circle.setAttributeNS(null, "fill", "hsla(0, 100%, 50%)");
+	this.circle.setAttributeNS(null, "stroke", "hsla(0, 100%, 50%)")
 	this.circle.setAttributeNS(null, "stroke-width", "2");
 	  
 	// make sure circle is in front of most things
@@ -162,26 +160,29 @@ function Firefly(startX, startY, svg, id){
 	this.neighborFlash = false;
 	this.waitTime;
 	this.recharging = false;
+	this.flashing = false;
 
 	this.flash = function(){
 		// check if right time of day
 		if (firefliesFlash) {
 			startCircleUpdate();
 
-			if (this.neighborFlash == true) console.log("early flash called!!!!");
+			// if (this.neighborFlash == true) console.log("early flash called!!!!");
 
 			let currentFirefly = fireflies[this.fireflyID];
 			// flash
-			this.circle.setAttributeNS(null, "r", 10);
+			this.flashing = true;
+			this.circle.setAttributeNS(null, "r", (this.radius*2)/startZ);
 			this.circle.setAttributeNS(null, "fill", "#FFFF00");
 			this.circle.setAttributeNS(null, "stroke", "#FFFF00");
 
 			setTimeout(function(currentFirefly) {
 			    // console.log("flashing!");
 
-			    currentFirefly.circle.setAttributeNS(null, "r", 3);
-				currentFirefly.circle.setAttributeNS(null, "fill", "#FF0000");
+				currentFirefly.circle.setAttributeNS(null, "fill", "hsla(0, 100%, 50%)");
 				currentFirefly.circle.setAttributeNS(null, "stroke", "#FF0000");
+				currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius/startZ);
+				currentFirefly.flashing = false;
 
 				// go through fireflies and set off neighbors
 				for (let i=0; i<fireflies.length; i++){
@@ -193,7 +194,7 @@ function Firefly(startX, startY, svg, id){
 
 				currentFirefly.neighborFlash = false;
 				
-			}, 2000, currentFirefly);
+			}, 1000, currentFirefly);
 
 			this.recharging = true;
 
@@ -223,7 +224,7 @@ function Firefly(startX, startY, svg, id){
 
 function move(currentFirefly){
 		// check if reached end point
-		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1]){
+		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1] && currentFirefly.z == currentFirefly.moveEnd[2]){
 			//choose end point
 			currentFirefly.moveEnd = newLocation();
 		}
@@ -231,9 +232,10 @@ function move(currentFirefly){
 		//calculate difference between them
 		let diffX = currentFirefly.moveEnd[0] - currentFirefly.x;
 		let diffY = currentFirefly.moveEnd[1] - currentFirefly.y;
+		let diffZ = currentFirefly.moveEnd[2] - currentFirefly.z;
 
 		//update coordinates while moving from point A to point B
-		let baseSpeed = 2;
+		let baseSpeed = 5;
 		let finalDiffX = 0;
 		if (diffX > 0){ 
 			finalDiffX = Math.min(baseSpeed, diffX);
@@ -250,12 +252,34 @@ function move(currentFirefly){
 			finalDiffY = Math.max(-baseSpeed, diffY);
 		}
 
+		let baseChange = 0.5;
+		let finalDiffZ = 0;
+		if (diffZ > 0){
+			finalDiffZ = Math.min(baseChange, diffZ);
+			// console.log("basechange: " + baseChange + ", diffz: " + diffZ);
+		}
+		else{
+			finalDiffZ = Math.max(-baseChange, diffZ);
+		}
+
+
 		currentFirefly.x += finalDiffX;
 		currentFirefly.y += finalDiffY;
+		currentFirefly.z += finalDiffZ;
 
 		currentFirefly.circle.setAttributeNS(null, "cx", currentFirefly.x);
 		currentFirefly.circle.setAttributeNS(null, "cy", currentFirefly.y);
-
+		if (!currentFirefly.flashing) {
+			currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius/(currentFirefly.z));
+			let redBrightness = 60 - 3*currentFirefly.z;
+			currentFirefly.circle.setAttributeNS(null, "fill", "hsla(0, 100%, " + redBrightness + "%)");
+			currentFirefly.circle.setAttributeNS(null, "stroke", "hsla(0, 100%, " + redBrightness + "%)");
+		}
+		else{
+			console.log("flashing!");
+			currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius*2/(currentFirefly.z));
+		}
+		// console.log("z: " + currentFirefly.z + ", radius: " + currentFirefly.radius/currentFirefly.z + ", " + finalDiffZ);
 	}
 
 
@@ -324,7 +348,8 @@ function addFireflies(){
 	for (let i=0; i<1; i++){
 		let x = randRange(3, 798);
 		let y = randRange(3, 498);
-		let newFirefly = new Firefly(x, y, svg, fireflies.length)
+		let z = randRange(1, 20);
+		let newFirefly = new Firefly(x, y, z, svg, fireflies.length)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
 		newFirefly.moveEnd = newLocation();
@@ -367,9 +392,10 @@ function newLocation(){
     
     let newHeight = Math.floor(Math.random() * rect.width);
     let newWidth = Math.floor(Math.random() * rect.height);
+    let newZ = Math.floor(Math.random() * 20) + 1;
 
     
-    return [newHeight,newWidth];    
+    return [newHeight,newWidth, newZ];    
 }
 
 // function animateDiv(myclass){

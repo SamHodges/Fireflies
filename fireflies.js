@@ -22,8 +22,6 @@ so they would place a plant, and that would affect whether fireflies can see eac
 - talk more about real life data
 maybe include videos?
 
-- centering svg/make it bigger/look nicer -- Sam
-
 - add more description of what the visual means for the user
 
 - user choosing where to spawn fireflies

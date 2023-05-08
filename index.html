@@ -30,9 +30,15 @@
 	</ol>
 
 	<h1>Choose time of day!</h1>
-	<button id="morning" onClick="setMorning()">Morning</button>
+	<p class="times"><input type="image" src="./sunrise.jpg" alt="Morning" width="50" height="50" id="morning" onClick="setMorning()">
+	Morning</p>
+	<br>
+	<input type="image" src="./midday.jpg" alt="Midday" width="50" height="50" id="midday" onClick="setMidday()">
 	<button id="midday" onClick="setMidday()">Midday</button>
+	<br>
+	<input type="image" src="./night.jpg" alt="Night" width="50" height="50" id="night" onClick="setNight()">
 	<button id="night" onClick="setNight()">Nighttime</button>
+	
 	<br />
 	<button id="addFireflies" onClick="addFireflies()">Add Fireflies</button>
 	<button id="removeFireflies" onClick="removeFireflies()">Remove Fireflies</button>

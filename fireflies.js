@@ -4,11 +4,23 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- movement (add interval )
 - multiple fireflies
+when >1 firefly, all of them update the visual of the first, instead of their own
+
 - neighbor flashing
+add capability so that when a neighbor firefly flashes, the current firefly flashes
+
+- flash when change day to night
+right now if you add fireflies in daytime, then switch to night, they never flash
+
 - circle -> countdown with text
+people said it would be clearer if it was a countdown rather than a circle
+
 - better buttons
+just adding formatting/css to the buttons, maybe making the day ones like a wheel with representations of morning/night/etc
+
+- control speed
+have a control to speed up/slow down fireflies using basespeed in the move interval
 */
 
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){
@@ -182,7 +194,6 @@ function Firefly(startX, startY, svg){
 }
 
 function move(currentFirefly){
-		console.log(currentFirefly.moveEnd);
 		// check if reached end point
 		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1]){
 			//choose end point
@@ -193,7 +204,6 @@ function move(currentFirefly){
 		//calculate difference between them
 		let diffX = currentFirefly.moveEnd[0] - currentFirefly.x;
 		let diffY = currentFirefly.moveEnd[1] - currentFirefly.y;
-		console.log("differences " + diffX + ", " + diffY);
 
 		//update coordinates while moving from point A to point B
 		let baseSpeed = 2;
@@ -326,7 +336,6 @@ function drawFireflies(){
 }
 
 function newLocation(){
-	console.log("New location");
     
     // Get viewport dimensions
     let rect = svg.getBoundingClientRect();
@@ -334,7 +343,6 @@ function newLocation(){
     let newHeight = Math.floor(Math.random() * rect.width);
     let newWidth = Math.floor(Math.random() * rect.height);
 
-    console.log("NEW STOOF: "+ newWidth);
     
     return [newHeight,newWidth];    
 }

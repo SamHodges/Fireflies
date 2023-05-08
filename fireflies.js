@@ -8,10 +8,10 @@ TODO:
 people said it would be clearer if it was a countdown rather than a circle
 make sure its not in the svg, but a html element above it
 
-- better buttons
+- better buttons -- Sam
 just adding formatting/css to the buttons, maybe making the day ones like a wheel with representations of morning/night/etc
 
-- control speed
+- control speed 
 have a control to speed up/slow down fireflies using basespeed in the move interval
 
 - don't synchronize until 15 fireflies
@@ -22,13 +22,11 @@ so they would place a plant, and that would affect whether fireflies can see eac
 - talk more about real life data
 maybe include videos?
 
-- centering svg/make it bigger/look nicer
+- centering svg/make it bigger/look nicer -- Sam
 
 - add more description of what the visual means for the user
 
 - user choosing where to spawn fireflies
-
-- move music to below svg
 
 - a way to control distance radius
 */

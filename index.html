@@ -2,7 +2,7 @@
 <html lang=en>
 	<meta charset=utf-8>
 	<title>Fireflies</title>
-	<script src="./fireflies.js"></script>
+	<script src="./fireflies.js" defer></script>
 	<link rel="stylesheet" href="./style.css">
 
 	<script>
@@ -42,6 +42,7 @@
 	<br />
 	<button id="addFireflies" onClick="addFireflies()">Add Fireflies</button>
 	<button id="removeFireflies" onClick="removeFireflies()">Remove Fireflies</button>
+	<button id="obstacle" onClick="obstBool()">Add an Obstacle</button>
 
 	<div id="firefly-wrapper">
 		<svg id="firefly-visual" width="90%" height="500"></svg>

@@ -201,6 +201,8 @@ function Firefly(startX, startY, startZ, svg, id){
 			
 		}
 
+		//line between fireflies n determine if line is atop the object, 
+
 		function nextFlash(currentFirefly){
 			currentFirefly.recharging = false;
 
@@ -303,6 +305,37 @@ function checkNeighbors(currentFirefly){
 	currentFirefly.waitTime -= 1;
 }
 
+let isObst = false;
+
+function obstBool(){
+	isObst = true;
+	console.log("boolean!!!!!");
+}
+
+document.getElementById("firefly-visual").addEventListener("click", (event)=>{
+	const svg = document.querySelector("#firefly-visual");
+	const rect = svg.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+	
+	console.log("click! click! click!");
+
+	if(isObst == true){
+		obst = document.createElementNS(SVG_NS, 'rect');
+		obst.setAttribute("width", "10");
+		obst.setAttribute("height", "500");
+		obst.setAttribute("y", y);
+		obst.setAttribute("x", "" + x);
+		obst.style.fill = "green";
+		svg.appendChild(obst);
+		console.log("appending!");
+		isObst = false;
+		//addeventlistener 2 fv - always on, but only 
+		//does something when btn clicked - var isobstclicked 
+		//true WHEN clicked and set to false once rect drawn
+	}
+});
+
 function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
 	firefliesFlash = false;
@@ -335,7 +368,7 @@ function addFireflies(){
 	//HARDCODING AS A STOPGAP - LELAND
 
 	//we can talk about this in/before our meeting 
-	//and if it still has relevance+ we don't have 
+	//and if it still has relevance + we don't have 
 	//an answer I'll take it to oren or rosenbaum - Lau
 
 	const width = 800;
@@ -393,7 +426,6 @@ function newLocation(){
     
     return [newHeight,newWidth, newZ];    
 }
-
 // function animateDiv(myclass){
 //     var newq = makeNewPosition();
 //     $(myclass).animate({ top: newq[0], left: newq[1] }, 1000,   function(){

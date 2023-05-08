@@ -4,7 +4,7 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- multiple fireflies
+- multiple fireflies -- Sam
 when >1 firefly, all of them update the visual of the first, instead of their own
 
 - neighbor flashing

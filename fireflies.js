@@ -204,6 +204,8 @@ function Firefly(startX, startY, svg, id){
 			
 		}
 
+		//line between fireflies n determine if line is atop the object, 
+
 		function nextFlash(currentFirefly){
 			currentFirefly.recharging = false;
 
@@ -282,6 +284,37 @@ function checkNeighbors(currentFirefly){
 	}
 	currentFirefly.waitTime -= 1;
 }
+
+let isObst = false;
+
+function obstBool(){
+	isObst = true;
+	console.log("boolean!!!!!");
+}
+
+document.getElementById("firefly-visual").addEventListener("click", (event)=>{
+	const svg = document.querySelector("#firefly-visual");
+	const rect = svg.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+	
+	console.log("click! click! click!");
+
+	if(isObst == true){
+		obst = document.createElementNS(SVG_NS, 'rect');
+		obst.setAttribute("width", "10");
+		obst.setAttribute("height", "250");
+		obst.setAttribute("y", y);
+		obst.setAttribute("x", "" + x);
+		obst.style.fill = "green";
+		svg.appendChild(obst);
+		console.log("appending!");
+		isObst = false;
+		//addeventlistener 2 fv - always on, but only 
+		//does something when btn clicked - var isobstclicked 
+		//true WHEN clicked and set to false once rect drawn
+	}
+});
 
 function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
@@ -371,7 +404,6 @@ function newLocation(){
     
     return [newHeight,newWidth];    
 }
-
 // function animateDiv(myclass){
 //     var newq = makeNewPosition();
 //     $(myclass).animate({ top: newq[0], left: newq[1] }, 1000,   function(){

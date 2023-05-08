@@ -166,6 +166,8 @@ function Firefly(startX, startY, svg, id){
 		if (firefliesFlash) {
 			startCircleUpdate();
 
+			if (this.neighborFlash == true) console.log("early flash called!!!!");
+
 			let currentFirefly = fireflies[this.fireflyID];
 			// flash
 			this.circle.setAttributeNS(null, "r", 10);
@@ -182,7 +184,7 @@ function Firefly(startX, startY, svg, id){
 				// go through fireflies and set off neighbors
 				for (let i=0; i<fireflies.length; i++){
 					let distance = Math.sqrt((currentFirefly.x - fireflies[i].x)**2 + (currentFirefly.y - fireflies[i].y)**2);
-					if (distance < 1000){
+					if (distance < 250){
 						if (!fireflies[i].recharging) fireflies[i].neighborFlash = true;
 					}
 				}
@@ -271,6 +273,7 @@ function checkNeighbors(currentFirefly){
 	// console.log("waiting.... " + currentFirefly.waitTime);
 
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
+		if (currentFirefly.neighborFlash == true) console.log("early flash!!!!");
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;
 		currentFirefly.flash();

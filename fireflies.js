@@ -26,6 +26,8 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 - add more code comments
 
+- learn more moves when obst explanation appears
+
 - maybe have movement as a rand num choice between 0 and current movement?
 */
 

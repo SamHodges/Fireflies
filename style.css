@@ -57,9 +57,10 @@ width:100%;
 	width: 25%;
 	margin-bottom: 5px;
 /*	margin: 0% 10% 1% 10%;*/
-margin-left:0px;
+	margin-left:0px;
 	text-align: center;
-	float: left;
+	float: right;
+	margin-right:3%;
 }
 
 .back-button{
@@ -167,4 +168,9 @@ input{
 	margin-left: 0px;
 	margin-left: 50px;
 	margin-top: 47px;
+}
+
+#learn-more{
+	float:right;
+	margin-right:3%;
 }

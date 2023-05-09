@@ -15,8 +15,6 @@ maybe include videos? -- Laura
 
 - merge some intervals so it's a bit more optimized lololol
 
-- add clock arrow + highlighting to day tracker -- Sam
-
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/

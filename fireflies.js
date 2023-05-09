@@ -16,21 +16,17 @@ maybe include videos? -- Laura
 The user should learn something technical through a combination reading the text and interacting with visual elements. 
 Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Laura
 
+- make sure all debugging messages are deleted -- only in Laura's code now
+
+-----------------------------------------
+
 - merge some intervals so it's a bit more optimized lololol
 
-- make sidebar better at screen size changes
+- make sidebar better at screen size changes (changing layout for when loaded on phone?)
 
 - add page that "describes some implementation details of the project and challenges encountered in 
 creating the project. References to inspirational work as well as technical documentation for “non-standard” 
 features used in the project are also included." 
-
-- make sure all debugging messages are deleted
-
-- changing layout for when loaded on phone
-
-- make it clearer what obstacles section is
-
-- add something to make it clear what spawn location is
 
 - add more code comments
 */
@@ -86,7 +82,6 @@ function Firefly(startX, startY, startZ, svg, id){
 	this.flash = function(){
 		// check if right time of day
 		if (firefliesFlash) {
-			// if (this.neighborFlash == true) console.log("early flash called!!!!");
 
 			let currentFirefly = fireflies[this.fireflyID];
 			// flash
@@ -109,7 +104,6 @@ function Firefly(startX, startY, startZ, svg, id){
 			}
 
 			setTimeout(function(currentFirefly) {
-			    // console.log("flashing!");
 
 				currentFirefly.circle.setAttributeNS(null, "fill", "hsla(0, 100%, 50%)");
 				currentFirefly.circle.setAttributeNS(null, "stroke", "#FF0000");
@@ -135,7 +129,6 @@ function Firefly(startX, startY, startZ, svg, id){
 
 			this.recharging = true;
 
-			// console.log("Waiting!");
 			// call wait for 12 seconds
 
 			setTimeout(nextFlash, 12000, currentFirefly);
@@ -198,7 +191,6 @@ function move(currentFirefly){
 		let finalDiffZ = 0;
 		if (diffZ > 0){
 			finalDiffZ = Math.min(baseChange, diffZ);
-			// console.log("basechange: " + baseChange + ", diffz: " + diffZ);
 		}
 		else{
 			finalDiffZ = Math.max(-baseChange, diffZ);
@@ -231,7 +223,6 @@ function move(currentFirefly){
 			currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius*2/(currentFirefly.z));
 		}
 		currentFirefly.circle.setAttributeNS(null, "z-index", 20-currentFirefly.z);
-		// console.log("z: " + currentFirefly.z + ", radius: " + currentFirefly.radius/currentFirefly.z + ", " + finalDiffZ);
 	}
 
 
@@ -245,14 +236,10 @@ function mainFlash(currentFirefly){
 
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
-	// console.log("waiting.... " + currentFirefly.waitTime);
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
-	console.log("Waiting: " + currentFirefly.waitTime + " seconds remaining");
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
-		if (currentFirefly.neighborFlash == true) console.log("early flash!!!!");
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;
-		console.log("go flash!");
 		currentFirefly.flash();
 	}
 	currentFirefly.waitTime -= 1;
@@ -263,7 +250,7 @@ let isPlacement = false;
 
 function obstBool(){
 	isObst = true;
-	console.log("boolean!!!!!");
+	document.getElementById("obstacle-explain").innerHTML = "Now click where you want the obstacle to be!";
 }
 
 document.getElementById("firefly-visual").addEventListener("click", (event)=>{
@@ -284,6 +271,7 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		svg.appendChild(obst);
 		console.log("appending!");
 		isObst = false;
+		document.getElementById("obstacle-explain").innerHTML = "";
 		//ID top of barrier obj - dstinguish case where barrier is btwn them from when it isn't
 		//isBlocked(ff coords, barrier top coords) - to tell if distance btwn fireflies is disrupted by object)
 		
@@ -297,6 +285,8 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 	if(isPlacement){
 		spawnCircle.setAttributeNS(null, "cx", x);
 		spawnCircle.setAttributeNS(null, "cy", y);
+		text.setAttributeNS(null, "x", x-47);
+		text.setAttributeNS(null, "y", y);
 	}
 });
 
@@ -308,7 +298,6 @@ function setMorning(){
 	document.getElementById("morning").setAttribute("style", "border:5px solid #fca4e1");
 	document.getElementById("midday").setAttribute("style", "border:0px");
 	document.getElementById("night").setAttribute("style", "border:0px");
-	console.log(document.getElementById("morning"));
 	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-morning");
 
 }
@@ -411,6 +400,7 @@ function drawFireflies(){
 	}
 
 	createSpawnCircle(svg);
+	document.getElementById("placement").checked = false;
 
 	// svg.getElementById("group-5").remove();
 }
@@ -445,10 +435,12 @@ document.getElementById("radius").addEventListener('input', function (evt) {
 
 
 let spawnCircle = document.createElementNS(SVG_NS, "circle");
+let text = document.createElementNS(SVG_NS, "text");
 
 function createSpawnCircle(svg){
 	spawnCircle.setAttributeNS(null, "fill", "#000");
 	svg.append(spawnCircle);
+	svg.append(text);
 }
 
 
@@ -459,6 +451,7 @@ document.getElementById("placement").addEventListener("input", function(e){
 
 	if (!isPlacement){
 		spawnCircle.setAttributeNS(null, "fill-opacity", 0);
+		document.getElementById("placement-explain").innerHTML = "";
 	}
 	else{
 		const rect = svg.getBoundingClientRect();
@@ -470,9 +463,17 @@ document.getElementById("placement").addEventListener("input", function(e){
 		spawnCircle.setAttributeNS(null, "cy", y);
 		spawnCircle.setAttributeNS(null, "r", 50);
 		spawnCircle.setAttributeNS(null, "fill-opacity", 100);
+
+		text.setAttributeNS(null, "x", x-47);
+		text.setAttributeNS(null, "y", y);
+		text.setAttributeNS(null,"font-size","14");
+		text.setAttributeNS(null, "fill", "#FFFFFF");
+		text.innerHTML = "Spawn Circle";
+
+
+		document.getElementById("placement-explain").innerHTML = "Click where you want the fireflies to spawn!";
 	}
 	
-	console.log(document.getElementById("placement").checked);
 	
 });
 

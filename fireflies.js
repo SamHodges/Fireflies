@@ -4,7 +4,7 @@ let firefliesFlash = false;
 
 /*
 TODO:
-- circle -> countdown with text
+- circle -> countdown with text -- Sam
 people said it would be clearer if it was a countdown rather than a circle
 make sure its not in the svg, but a html element above it
 
@@ -25,6 +25,8 @@ maybe include videos?
 - merge some intervals so it's a bit more optimized lololol
 
 - have it so they don't all immediately flash when it changes to night
+
+- update html p with day time changes
 
 */
 

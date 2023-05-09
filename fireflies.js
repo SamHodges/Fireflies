@@ -25,6 +25,8 @@ maybe include videos?
 
 - improve movements so they don't get stuck on one axis directions
 
+- add clock arrow + highlighting to day tracker
+
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/

@@ -15,6 +15,11 @@ maybe include videos? -- Laura
 
 - merge some intervals so it's a bit more optimized lololol
 
+- make sidebar better at screen size changes
+
+- add page that "describes some implementation details of the project and challenges encountered in 
+creating the project. References to inspirational work as well as technical documentation for “non-standard” 
+features used in the project are also included." -- Sam
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/

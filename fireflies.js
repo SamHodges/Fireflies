@@ -12,6 +12,9 @@ so they would place a plant, and that would affect whether fireflies can see eac
 
 - talk more about real life data + add more description of what the visual means for the user
 maybe include videos? -- Laura
+"Written content clearly and concisely describes the purpose of the site, what it demonstrates and why. 
+The user should learn something technical through a combination reading the text and interacting with visual elements. 
+Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Laura
 
 - merge some intervals so it's a bit more optimized lololol
 
@@ -19,7 +22,17 @@ maybe include videos? -- Laura
 
 - add page that "describes some implementation details of the project and challenges encountered in 
 creating the project. References to inspirational work as well as technical documentation for “non-standard” 
-features used in the project are also included." -- Sam
+features used in the project are also included." 
+
+- make sure all debugging messages are deleted
+
+- changing layout for when loaded on phone
+
+- make it clearer what obstacles section is
+
+- add something to make it clear what spawn location is
+
+- add more code comments
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
@@ -68,6 +81,7 @@ function Firefly(startX, startY, startZ, svg, id){
 	this.waitTime;
 	this.recharging = false;
 	this.flashing = false;
+	this.remove = false;
 
 	this.flash = function(){
 		// check if right time of day
@@ -195,6 +209,8 @@ function move(currentFirefly){
 		currentFirefly.x += finalDiffX;
 		currentFirefly.y += finalDiffY;
 		currentFirefly.z += finalDiffZ;
+
+		if (currentFirefly.remove == true) return;
 
 		let groupZ = Math.floor(currentFirefly.z);
 		svg.getElementById("group-" + groupZ).append(currentFirefly.circle);
@@ -365,11 +381,14 @@ function addFireflies(){
 function removeFireflies(){
 
 	let fireflyAmount = document.getElementById("amount").value;
+	fireflyAmount = Math.min(fireflies.length, fireflyAmount);
 
 	for (let i=0; i<fireflyAmount; i++){
-		let pos = randRange(0, fireflies.length);
-		let toDelete = fireflies.splice(pos, 1);
-		toDelete[0].circle.remove();
+		let toDelete = fireflies[fireflies.length-1];
+		toDelete.remove = true;
+
+		toDelete.circle.remove();
+		fireflies.pop();
 		if (fireflies.length == 0) return;
 	}
 

@@ -8,10 +8,7 @@ TODO:
 people said it would be clearer if it was a countdown rather than a circle
 make sure its not in the svg, but a html element above it
 
-- better buttons -- Sam
-just adding formatting/css to the buttons, maybe making the day ones like a wheel with representations of morning/night/etc
-
-- control speed 
+- control speed -- Sam
 have a control to speed up/slow down fireflies using basespeed in the move interval
 
 - don't synchronize until 15 fireflies
@@ -26,7 +23,14 @@ maybe include videos?
 
 - user choosing where to spawn fireflies
 
-- a way to control distance radius
+- a way to control distance radius -- Sam
+
+- control how many fieflies to add -- Sam
+
+- remove obstacle
+
+- merge some intervals so it's a bit more optimized lololol
+
 */
 
 function SynchronizationCircle(synchronizationDuration, synchronizationRadius, svg){

@@ -4,6 +4,8 @@
 	<title>Fireflies</title>
 	<script src="./fireflies.js" defer></script>
 	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 
 	<script>
 		window.onload = function(){
@@ -29,26 +31,65 @@
 		<li>Neighbors continue to respond, producing sychronization!</li>
 	</ol>
 
-	<h1>Choose time of day!</h1>
-	<p class="times"><input type="image" src="./sunrise.jpg" alt="Morning" width="50" height="50" id="morning" onClick="setMorning()">
-	Morning</p>
-	<br>
-	<input type="image" src="./midday.jpg" alt="Midday" width="50" height="50" id="midday" onClick="setMidday()">
-	<button id="midday" onClick="setMidday()">Midday</button>
-	<br>
-	<input type="image" src="./night.jpg" alt="Night" width="50" height="50" id="night" onClick="setNight()">
-	<button id="night" onClick="setNight()">Nighttime</button>
-	
-	<br />
-	<button id="addFireflies" onClick="addFireflies()">Add Fireflies</button>
-	<button id="removeFireflies" onClick="removeFireflies()">Remove Fireflies</button>
-	<button id="obstacle" onClick="obstBool()">Add an Obstacle</button>
+	<h1>Demo!</h1>
 
 	<div id="firefly-wrapper">
-		<svg id="firefly-visual" width="90%" height="500"></svg>
+		<svg id="firefly-visual" width="70%" height="800"></svg>
 	</div>
-	<audio controls>
+
+	<div class="background">
+		<h2>Time</h2>
+		<button id="midday" onClick="setMidday()"></button>
+		<div id="clock-group">
+			<button id="morning" onClick="setMorning()"></button>
+			<div id="clock"></div>
+			<button id="night" onClick="setNight()"></button>
+		</div>
+		<p>Current Time: Morning</p>
+		<p>Recharge Time: 12 seconds</p>
+	</div>
+
+	
+
+	<div class="background">
+		<h2>Fireflies</h2>
+		<div>
+			<button id="addFireflies" class="round-buttons" onClick="addFireflies()">+</button>
+			<label for="amount">Amount:</label>
+	  		<input type="text" id="amount" name="amount" value="5">
+			<button id="removeFireflies" class="round-buttons" onClick="removeFireflies()">-</button>
+		</div>
+
+		<div class="inputs"> 
+			<label for="speed">Base Speed:</label>
+  			<input type="text" id="speed" name="speed" value="5">
+		</div>
+		
+  		<div class="inputs">
+  			<label for="radius">Synchronization Radius:</label>
+  			<input type="text" id="radius" name="radius" value="5">
+  		</div>
+
+  		<div class="inputs">
+  			<label for="radius">Choose placement?</label>
+  			<input type="checkbox" id="radius" name="radius">
+  		</div>
+  		
+	</div>
+
+	<div class="background">
+		<h2>Obstacles</h2>
+		<div>
+			<button id="obstacle" class="round-buttons" onClick="obstBool()">+</button>
+			<button id="removeFireflies" class="round-buttons" onClick="removeFireflies()">-</button>
+		</div>
+	</div>
+
+	<div class="background">
+		<audio controls>
 		<source src="https://dl.dropbox.com/s/ibaooslzn9fon2d/Fireflies.mp3" type="audio/mpeg">
 		Your browser does not support the audio element.
 	</audio>
+	</div>
+	
 </html>

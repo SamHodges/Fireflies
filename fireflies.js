@@ -8,9 +8,6 @@ TODO:
 people said it would be clearer if it was a countdown rather than a circle
 make sure its not in the svg, but a html element above it
 
-- control speed -- Sam
-have a control to speed up/slow down fireflies using basespeed in the move interval
-
 - don't synchronize until 15 fireflies
 
 - let users add objects -- Laura
@@ -23,13 +20,11 @@ maybe include videos?
 
 - user choosing where to spawn fireflies
 
-- a way to control distance radius -- Sam
-
-- control how many fieflies to add -- Sam
-
 - remove obstacle
 
 - merge some intervals so it's a bit more optimized lololol
+
+- have it so they don't all immediately flash when it changes to night
 
 */
 
@@ -123,6 +118,7 @@ function shrinkCircle(){
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
 
 let fireflies = [];
+let synchronizationRadius = document.getElementById("radius").value;
 
 function Firefly(startX, startY, startZ, svg, id){
 
@@ -187,7 +183,7 @@ function Firefly(startX, startY, startZ, svg, id){
 				// go through fireflies and set off neighbors
 				for (let i=0; i<fireflies.length; i++){
 					let distance = Math.sqrt((currentFirefly.x - fireflies[i].x)**2 + (currentFirefly.y - fireflies[i].y)**2);
-					if (distance < 250){
+					if (distance < synchronizationRadius){
 						if (!fireflies[i].recharging) fireflies[i].neighborFlash = true;
 					}
 				}
@@ -224,6 +220,8 @@ function Firefly(startX, startY, startZ, svg, id){
 
 }
 
+let baseSpeed = document.getElementById("speed").value;
+
 function move(currentFirefly){
 		// check if reached end point
 		if(currentFirefly.x == currentFirefly.moveEnd[0] && currentFirefly.y == currentFirefly.moveEnd[1] && currentFirefly.z == currentFirefly.moveEnd[2]){
@@ -237,7 +235,6 @@ function move(currentFirefly){
 		let diffZ = currentFirefly.moveEnd[2] - currentFirefly.z;
 
 		//update coordinates while moving from point A to point B
-		let baseSpeed = 5;
 		let finalDiffX = 0;
 		if (diffX > 0){ 
 			finalDiffX = Math.min(baseSpeed, diffX);
@@ -254,7 +251,7 @@ function move(currentFirefly){
 			finalDiffY = Math.max(-baseSpeed, diffY);
 		}
 
-		let baseChange = 0.5;
+		let baseChange = baseSpeed/10;
 		let finalDiffZ = 0;
 		if (diffZ > 0){
 			finalDiffZ = Math.min(baseChange, diffZ);
@@ -365,22 +362,17 @@ function randRange(start, end){
 
 function addFireflies(){
 	svg = document.querySelector("#firefly-visual");
+
+	let fireflyAmount = document.getElementById("amount").value;
 	
-	//width = svg.width;
-	//height = svg.height;
-	//I HAVE NO IDEA WHY THIS ISN'T WORKING
-	//HARDCODING AS A STOPGAP - LELAND
+	let rect = svg.getBoundingClientRect();
 
-	//we can talk about this in/before our meeting 
-	//and if it still has relevance + we don't have 
-	//an answer I'll take it to oren or rosenbaum - Lau
+	const width = rect.width;
+	const height = rect.height;
 
-	const width = 800;
-	const height = 500;
-
-	for (let i=0; i<1; i++){
-		let x = randRange(3, 798);
-		let y = randRange(3, 498);
+	for (let i=0; i<fireflyAmount; i++){
+		let x = randRange(3, width);
+		let y = randRange(3, height);
 		let z = randRange(1, 20);
 		let newFirefly = new Firefly(x, y, z, svg, fireflies.length)
 		fireflies.push(newFirefly);
@@ -393,17 +385,17 @@ function addFireflies(){
 }
 
 function removeFireflies(){
-	if(fireflies.length < 5){
-		return;
-	}
 
-	for (let i=0; i<5; i++){
+	let fireflyAmount = document.getElementById("amount").value;
+
+	for (let i=0; i<fireflyAmount; i++){
 		let pos = randRange(0, fireflies.length);
 		let toDelete = fireflies.splice(pos, 1);
 		toDelete[0].circle.remove();
+		if (fireflies.length == 0) return;
 	}
 
-	setFireflyID(firflies);
+	setFireflyID(fireflies);
 }
 
 function setFireflyID(firflies){
@@ -437,3 +429,11 @@ function newLocation(){
 //     });
     
 // };
+
+document.getElementById("speed").addEventListener('input', function (evt) {
+    baseSpeed = this.value;
+});
+
+document.getElementById("radius").addEventListener('input', function (evt) {
+    synchronizationRadius = this.value;
+});

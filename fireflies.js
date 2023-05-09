@@ -24,10 +24,6 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 - make sidebar better at screen size changes (changing layout for when loaded on phone?)
 
-- add page that "describes some implementation details of the project and challenges encountered in 
-creating the project. References to inspirational work as well as technical documentation for “non-standard” 
-features used in the project are also included." 
-
 - add more code comments
 */
 

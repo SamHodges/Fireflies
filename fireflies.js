@@ -330,9 +330,15 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		svg.appendChild(obst);
 		console.log("appending!");
 		isObst = false;
+		//ID top of barrier obj - dstinguish case where barrier is btwn them from when it isn't
+		//isBlocked(ff coords, barrier top coords) - to tell if distance btwn fireflies is disrupted by object)
+		
 		//addeventlistener 2 fv - always on, but only 
 		//does something when btn clicked - var isobstclicked 
 		//true WHEN clicked and set to false once rect drawn
+
+		//IN ADDITION: STORE BARRIER OBJ? when computing the upd8s for each firefly need to upd8 that to CHECK if barrier exists btwn fireflies.
+		//internal rep of barrier, external function- change upd8 function so it incorps barrier 
 	}
 });
 

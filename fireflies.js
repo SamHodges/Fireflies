@@ -7,7 +7,7 @@ updates.innerHTML = "Daytime, no flashing";
 
 /*
 TODO:
-- let users add objects -- Laura
+- let users add/remove objects -- Laura
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
 - talk more about real life data + add more description of what the visual means for the user
@@ -15,12 +15,7 @@ maybe include videos? -- Laura
 
 - user choosing where to spawn fireflies
 
-- remove obstacle
-
 - merge some intervals so it's a bit more optimized lololol
-
-- add z coordinates so "in front" fireflies are actually in front
-cant use z-index-- make them invisible?
 
 - add clock arrow + highlighting to day tracker
 
@@ -247,6 +242,7 @@ function checkNeighbors(currentFirefly){
 }
 
 let isObst = false;
+let isPlacement = false;
 
 function obstBool(){
 	isObst = true;
@@ -280,6 +276,10 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 
 		//IN ADDITION: STORE BARRIER OBJ? when computing the upd8s for each firefly need to upd8 that to CHECK if barrier exists btwn fireflies.
 		//internal rep of barrier, external function- change upd8 function so it incorps barrier 
+	}
+	if(isPlacement){
+		spawnCircle.setAttributeNS(null, "cx", x);
+		spawnCircle.setAttributeNS(null, "cy", y);
 	}
 });
 
@@ -320,9 +320,19 @@ function addFireflies(){
 	const height = rect.height;
 
 	for (let i=0; i<fireflyAmount; i++){
-		let x = randRange(3, width);
-		let y = randRange(3, height);
+		let x = 0;
+		let y = 0;
+		if (isPlacement){
+			x = Math.floor(spawnCircle.getAttributeNS(null, "cx"));
+			y = Math.floor(spawnCircle.getAttributeNS(null, "cy"));
+		}
+		else{
+			x = randRange(3, width);
+			y = randRange(3, height);
+		}
+
 		let z = randRange(1, 20);
+
 		let newFirefly = new Firefly(x, y, z, svg, fireflies.length)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
@@ -362,6 +372,8 @@ function drawFireflies(){
 		svg.appendChild(curGroup);
 	}
 
+	createSpawnCircle(svg);
+
 	// svg.getElementById("group-5").remove();
 }
 
@@ -392,3 +404,38 @@ document.getElementById("speed").addEventListener('input', function (evt) {
 document.getElementById("radius").addEventListener('input', function (evt) {
     synchronizationRadius = this.value;
 });
+
+
+let spawnCircle = document.createElementNS(SVG_NS, "circle");
+
+function createSpawnCircle(svg){
+	spawnCircle.setAttributeNS(null, "fill", "#000");
+	svg.append(spawnCircle);
+}
+
+
+
+document.getElementById("placement").addEventListener("input", function(e){
+	isPlacement = document.getElementById("placement").checked;
+	const svg = document.querySelector("#firefly-visual");
+
+	if (!isPlacement){
+		spawnCircle.setAttributeNS(null, "fill-opacity", 0);
+	}
+	else{
+		const rect = svg.getBoundingClientRect();
+		const x = rect.width/2;
+		const y = rect.height/2;
+	    
+		// set center
+		spawnCircle.setAttributeNS(null, "cx", x);
+		spawnCircle.setAttributeNS(null, "cy", y);
+		spawnCircle.setAttributeNS(null, "r", 50);
+		spawnCircle.setAttributeNS(null, "fill-opacity", 100);
+	}
+	
+	console.log(document.getElementById("placement").checked);
+	
+});
+
+

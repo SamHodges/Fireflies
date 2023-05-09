@@ -3,7 +3,7 @@ let syncCircle = null;
 let firefliesFlash = false;
 
 let updates = document.getElementById("updates");
-updates.innerHTML = "Test";
+updates.innerHTML = "Daytime, no flashing";
 
 /*
 TODO:
@@ -12,18 +12,14 @@ TODO:
 - let users add objects -- Laura
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
-- talk more about real life data
+- talk more about real life data + add more description of what the visual means for the user
 maybe include videos?
-
-- add more description of what the visual means for the user
 
 - user choosing where to spawn fireflies
 
 - remove obstacle
 
 - merge some intervals so it's a bit more optimized lololol
-
-- have it so they don't all immediately flash when it changes to night
 
 - update html p with day time changes
 
@@ -142,21 +138,23 @@ function Firefly(startX, startY, startZ, svg, id){
 
 		//line between fireflies n determine if line is atop the object, 
 
-		function nextFlash(currentFirefly){
-			currentFirefly.recharging = false;
 
-			// choose random time
-			let maxTime = 10
-			currentFirefly.waitTime = Math.floor(Math.random() * maxTime); 
-
-			// wait for that amount of time
-			// call flash again if hasn't been triggered by neighbor
-			mainFlash(currentFirefly);
-		}
 
 		
 	}
 
+}
+
+function nextFlash(currentFirefly){
+	currentFirefly.recharging = false;
+
+	// choose random time
+	let maxTime = 10
+	currentFirefly.waitTime = Math.floor(Math.random() * maxTime); 
+
+	// wait for that amount of time
+	// call flash again if hasn't been triggered by neighbor
+	mainFlash(currentFirefly);
 }
 
 let baseSpeed = document.getElementById("speed").value;
@@ -292,7 +290,7 @@ function setNight(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
 	firefliesFlash = true;
 	for (let i=0; i<fireflies.length; i++){
-		fireflies[i].flash();
+		nextFlash(fireflies[i]);
 	}
 }
 

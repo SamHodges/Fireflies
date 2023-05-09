@@ -25,6 +25,8 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 - make sidebar better at screen size changes (changing layout for when loaded on phone?)
 
 - add more code comments
+
+- maybe have movement as a rand num choice between 0 and current movement?
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/

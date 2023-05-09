@@ -13,11 +13,9 @@ so they would place a plant, and that would affect whether fireflies can see eac
 - talk more about real life data + add more description of what the visual means for the user
 maybe include videos? -- Laura
 
-- user choosing where to spawn fireflies
-
 - merge some intervals so it's a bit more optimized lololol
 
-- add clock arrow + highlighting to day tracker
+- add clock arrow + highlighting to day tracker -- Sam
 
 */
 
@@ -287,12 +285,24 @@ function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
 	firefliesFlash = false;
 	document.getElementById("current-time").innerHTML = "Current Time: Morning";
+	updates.innerHTML = "Daytime, no flashing";
+	document.getElementById("morning").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("midday").setAttribute("style", "border:0px");
+	document.getElementById("night").setAttribute("style", "border:0px");
+	console.log(document.getElementById("morning"));
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-morning");
+
 }
 
 function setMidday(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
 	firefliesFlash = false;
 	document.getElementById("current-time").innerHTML = "Current Time: Midday";
+	updates.innerHTML = "Daytime, no flashing";
+	document.getElementById("midday").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("morning").setAttribute("style", "border:0px");
+	document.getElementById("night").setAttribute("style", "border:0px");
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-midday");
 }
 
 function setNight(){
@@ -302,6 +312,12 @@ function setNight(){
 	for (let i=0; i<fireflies.length; i++){
 		nextFlash(fireflies[i]);
 	}
+	updates.innerHTML = "No fireflies yet";
+	document.getElementById("night").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("midday").setAttribute("style", "border:0px");
+	document.getElementById("morning").setAttribute("style", "border:0px");
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-night");
+
 }
 
 //returns random int in the interval [start, end)

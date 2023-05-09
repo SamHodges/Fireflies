@@ -62,6 +62,16 @@ margin-left:0px;
 	float: left;
 }
 
+.back-button{
+	display: block;
+	background-color: #5b0c44;
+	padding: 6px;
+	width: 25%;
+	margin: auto;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
 
 #clock{
   background-image: url('empty_clock.png');

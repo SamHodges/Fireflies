@@ -21,8 +21,6 @@ maybe include videos?
 
 - merge some intervals so it's a bit more optimized lololol
 
-- update html p with day time changes
-
 - add z coordinates so "in front" fireflies are actually in front
 
 - improve movements so they don't get stuck on one axis directions
@@ -279,15 +277,18 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
 	firefliesFlash = false;
+	document.getElementById("current-time").innerHTML = "Current Time: Morning";
 }
 
 function setMidday(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
 	firefliesFlash = false;
+	document.getElementById("current-time").innerHTML = "Current Time: Midday";
 }
 
 function setNight(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#00008b";
+	document.getElementById("current-time").innerHTML = "Current Time: Night";
 	firefliesFlash = true;
 	for (let i=0; i<fireflies.length; i++){
 		nextFlash(fireflies[i]);

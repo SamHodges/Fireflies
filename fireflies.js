@@ -29,6 +29,9 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 - learn more moves when obst explanation appears
 
 - maybe have movement as a rand num choice between 0 and current movement?
+
+- make example firefly clearer in what it is
+
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/

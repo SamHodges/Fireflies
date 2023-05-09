@@ -11,7 +11,7 @@ TODO:
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
 - talk more about real life data + add more description of what the visual means for the user
-maybe include videos?
+maybe include videos? -- Laura
 
 - user choosing where to spawn fireflies
 
@@ -20,12 +20,15 @@ maybe include videos?
 - merge some intervals so it's a bit more optimized lololol
 
 - add z coordinates so "in front" fireflies are actually in front
+cant use z-index-- make them invisible?
 
 - add clock arrow + highlighting to day tracker
 
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
+
+
 
 let fireflies = [];
 let synchronizationRadius = document.getElementById("radius").value;
@@ -62,11 +65,8 @@ function Firefly(startX, startY, startZ, svg, id){
 		this.circle.setAttributeNS(null, "stroke-width", "10");
 	}
 	
-	  
-	// make sure circle is in front of most things
-	this.circle.setAttributeNS(null, "z-index", "2");
-
-	svg.appendChild(this.circle);
+	// svg.append(this.circle);
+	svg.getElementById("group-" + this.z).append(this.circle);
 
 	this.neighborFlash = false;
 	this.waitTime;
@@ -194,10 +194,14 @@ function move(currentFirefly){
 			finalDiffZ = Math.max(-baseChange, diffZ);
 		}
 
+		currentFirefly.circle.remove();
 
 		currentFirefly.x += finalDiffX;
 		currentFirefly.y += finalDiffY;
 		currentFirefly.z += finalDiffZ;
+
+		let groupZ = Math.floor(currentFirefly.z);
+		svg.getElementById("group-" + groupZ).append(currentFirefly.circle);
 
 		currentFirefly.circle.setAttributeNS(null, "cx", currentFirefly.x);
 		currentFirefly.circle.setAttributeNS(null, "cy", currentFirefly.y);
@@ -214,6 +218,7 @@ function move(currentFirefly){
 		else{
 			currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius*2/(currentFirefly.z));
 		}
+		currentFirefly.circle.setAttributeNS(null, "z-index", 20-currentFirefly.z);
 		// console.log("z: " + currentFirefly.z + ", radius: " + currentFirefly.radius/currentFirefly.z + ", " + finalDiffZ);
 	}
 
@@ -344,6 +349,14 @@ function setFireflyID(firflies){
 
 function drawFireflies(){
 	const svg = document.querySelector("#firefly-visual");
+
+	for (let i=21; i>0; i--){
+		let curGroup = document.createElementNS(SVG_NS, "g");
+		curGroup.setAttributeNS(null, "id", "group-" + i);
+		svg.appendChild(curGroup);
+	}
+
+	// svg.getElementById("group-5").remove();
 }
 
 function newLocation(){

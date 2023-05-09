@@ -2,7 +2,7 @@ body{
 	background-color: black;
 }
 
-h1{
+h1, h2{
 	text-align: center;
 	color: white;
 	font-family: "Freestyle Script", "Lucida Calligraphy", "Georgia", "Arial";
@@ -10,10 +10,19 @@ h1{
 	margin-bottom: 20px;
 }
 
-p {
+h2{
+	font-size: 30px;
+}
+
+p{
 	color: white;
 	margin-left: 10%;
 	margin-right: 10%;
+	font-family: "Merriweather", "Montserrat", "Helvetica", "Georgia", "Arial";
+}
+
+label{
+	color: white;
 	font-family: "Merriweather", "Montserrat", "Helvetica", "Georgia", "Arial";
 }
 
@@ -27,11 +36,102 @@ ol {
 
 
 #firefly-wrapper{
-	margin: auto;
+/*	margin: auto;*/
+	margin-right:0px;
+	float:left;
+/*	margin-top: 5%;*/
+width:70%;
+margin-right:2%;
 }
 
 #firefly-visual{
-	display: block;
-	margin: auto;
+/*	display: block;*/
+/*	margin: auto;*/
+width:100%;
 }
 
+.background{
+	display: block;
+	background-color: #5b0c44;
+	padding: 10px;
+	width: 25%;
+	margin-bottom: 5px;
+/*	margin: 0% 10% 1% 10%;*/
+margin-left:0px;
+	text-align: center;
+	float: left;
+}
+
+
+#clock{
+  background-image: url('empty_clock.png');
+  background-repeat: no-repeat;
+  background-size: 140px 140px;
+  height: 70px;
+  width: 140px;
+  float: left;
+  margin-left: 5px;
+}
+
+#morning{
+	background-image: url('sunrise.jpg');
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+/*	margin-left: 27%;*/
+	float:left;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+
+#midday{
+	background-image: url('midday.jpg');
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+	margin: auto;
+	margin-bottom: 10px;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+
+#night{
+	background-image: url('night.jpg');
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+	margin-bottom: 10px;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+	float:left;
+	margin-left: 5px;
+}
+
+#clock-group{
+	margin-bottom: 80px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 250px;
+}
+
+.round-buttons{
+	background-color: #fca4e1; 
+	color: #3f0a2f;
+	text-align: center;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 50%;
+	height: 40px;
+	width: 40px;
+	margin: 0% 5%;
+}
+
+input{
+	width:50px;
+	text-align: center;
+}
+
+.inputs{
+	margin: 2% 0%;
+}

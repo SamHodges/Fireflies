@@ -7,8 +7,6 @@ updates.innerHTML = "Daytime, no flashing";
 
 /*
 TODO:
-- don't synchronize until 15 fireflies
-
 - let users add objects -- Laura
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
@@ -22,8 +20,6 @@ maybe include videos?
 - merge some intervals so it's a bit more optimized lololol
 
 - add z coordinates so "in front" fireflies are actually in front
-
-- improve movements so they don't get stuck on one axis directions
 
 - add clock arrow + highlighting to day tracker
 
@@ -118,7 +114,7 @@ function Firefly(startX, startY, startZ, svg, id){
 				for (let i=0; i<fireflies.length; i++){
 					let distance = Math.sqrt((currentFirefly.x - fireflies[i].x)**2 + (currentFirefly.y - fireflies[i].y)**2);
 					if (distance < synchronizationRadius){
-						if (!fireflies[i].recharging) fireflies[i].neighborFlash = true;
+						if (!fireflies[i].recharging && fireflies.length > 15) fireflies[i].neighborFlash = true;
 					}
 				}
 

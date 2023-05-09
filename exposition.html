@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang=en>
+	<meta charset=utf-8>
+	<title>Fireflies</title>
+	<script src="./fireflies.js" defer></script>
+	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+	<h1>Exposition</h1>
+
+	<h2>Implementation Details</h2>
+
+	<p>
+		When reading about fireflies, we realized they weren't really based on internal synchronization, but more on randomness and probability.
+		Our implementation works in the same way- each firefly will recharge for 12 seconds (the minimum needed for fireflies to recharge physically), and then
+		flash in between 1-10 seconds. Real fireflies will flash sometime within a few minutes, so the change is mostly just for speed.
+		When a firefly flashes, it alerts all its neighbors. They then flash as long as they are able. This causes the fireflies to synchronize, even 
+		without a synchronization equation. 
+	</p>
+
+	<p>
+		All of our movement and flashing is handled using intervals. When a firefly flashes, it starts a countdown until it's recharged. For movement, a firefly will move a certain distance (baseSpeed) towards a random target every 25 milliseconds in order to achieve a smooth, motion like effect. We also use a fair amount of event listeners to interface between the UI and our code.
+	</p>
+
+	<h2>Challenges</h2>
+
+	<p>
+		We encountered a fair amount of challenges, mostly in terms of how best to visualize everything going on behind-the-scenes. We started with a 
+		"synchronization circle" to represent the recharge period, but people found it more confusing than helpful. Therefore, we've switched to an 
+		"example firefly"- a highlighted firefly that allows the user a bit of a deeper look into the stages of flashing/recharging/waiting.
+	</p>
+
+	<p>
+		We also struggled in terms of how best to visualize a 3-dimensional space. Initially, we though along the lines of a 3D graph model, but this added 
+		a fair amount of complexity. Instead, we decided to use a mixture of size and color. As fireflies "get closer", they increase in size and become
+		brighter in color. A smaller issue with this implementation was that "farther away" fireflies would pass in front of "closer" ones. Therefore, 
+		we implemented a grouping system- the 20 groups represent the 20 notches along the z-axis. As a firefly moves forward/backwards, they switch between 
+		these groups. This ensures a proper stacking method along with the color and size changes.
+	</p>
+
+	<p>
+		In terms of visualizing a time of day, many people asked if we could implement a clock-like feature. While not quite as smooth as some, we hope this meets their expectations. The clock is made up of multiple images (clock face, arrow, 3 time images). Using div grouping and CSS, we were able to position the images in relation to the clock, including the arrow on top of it (the arrow background is clear). We then center the entire div, maintaining the inner positions. An interesting point is that we created multiple IDs for the arrow in order to switch between clock positions more easily.
+	</p>
+
+	<p>
+		Finally, we had some trouble in terms of adding objects and stopping the fireflies seeing through them. @Laura fill in.
+	</p>
+
+	<h2>References</h2>
+
+	<p>
+		We were initially inspired by this <a href="https://visualize-it.github.io/firefly_synchronization/simulation.html"> example of firefly synchronization</a>. Thanks to Professor Orit Peleg's intensive studies, we were able to discover that <a href="https://www.quantamagazine.org/how-do-fireflies-flash-in-sync-studies-suggest-a-new-answer-20220920/">fireflies don't actually use an internalized rhymthm to synchronize</a>. We wanted to represent the more probability-aligned, realistic version of the algorithm, while also adding more user interaction and features.
+
+		We would like to shout out technical documentation we used, especially <a href="https://www.w3schools.com/">W3 Schools</a>, <a href="https://developer.mozilla.org/en-US/">Mozilla Web Docs</a>, and (of course) <a href="https://stackoverflow.com/">Stack Overflow</a>.
+	</p>
+	
+	
+</html>

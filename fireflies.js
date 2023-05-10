@@ -7,25 +7,36 @@ updates.innerHTML = "Daytime, no flashing";
 
 /*
 TODO:
-- let users add objects -- Laura
+- let users add/remove objects -- Laura
 so they would place a plant, and that would affect whether fireflies can see each other + flash
 
 - talk more about real life data + add more description of what the visual means for the user
-maybe include videos?
+maybe include videos? -- Laura
+"Written content clearly and concisely describes the purpose of the site, what it demonstrates and why. 
+The user should learn something technical through a combination reading the text and interacting with visual elements. 
+Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Laura
 
-- user choosing where to spawn fireflies
+- make sure all debugging messages are deleted -- only in Laura's code now
 
-- remove obstacle
+-----------------------------------------
 
 - merge some intervals so it's a bit more optimized lololol
 
-- add z coordinates so "in front" fireflies are actually in front
+- make sidebar better at screen size changes (changing layout for when loaded on phone?)
 
-- add clock arrow + highlighting to day tracker
+- add more code comments
+
+- learn more moves when obst explanation appears
+
+- maybe have movement as a rand num choice between 0 and current movement?
+
+- make example firefly clearer in what it is
 
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
+
+
 
 let fireflies = [];
 let synchronizationRadius = document.getElementById("radius").value;
@@ -62,21 +73,18 @@ function Firefly(startX, startY, startZ, svg, id){
 		this.circle.setAttributeNS(null, "stroke-width", "10");
 	}
 	
-	  
-	// make sure circle is in front of most things
-	this.circle.setAttributeNS(null, "z-index", "2");
-
-	svg.appendChild(this.circle);
+	// svg.append(this.circle);
+	svg.getElementById("group-" + this.z).append(this.circle);
 
 	this.neighborFlash = false;
 	this.waitTime;
 	this.recharging = false;
 	this.flashing = false;
+	this.remove = false;
 
 	this.flash = function(){
 		// check if right time of day
 		if (firefliesFlash) {
-			// if (this.neighborFlash == true) console.log("early flash called!!!!");
 
 			let currentFirefly = fireflies[this.fireflyID];
 			// flash
@@ -100,7 +108,6 @@ function Firefly(startX, startY, startZ, svg, id){
 			}
 
 			setTimeout(function(currentFirefly) {
-			    // console.log("flashing!");
 
 				currentFirefly.circle.setAttributeNS(null, "fill", "hsla(0, 100%, 50%)");
 				currentFirefly.circle.setAttributeNS(null, "stroke", "#FF0000");
@@ -126,7 +133,6 @@ function Firefly(startX, startY, startZ, svg, id){
 
 			this.recharging = true;
 
-			// console.log("Waiting!");
 			// call wait for 12 seconds
 
 			setTimeout(nextFlash, 12000, currentFirefly);
@@ -189,16 +195,21 @@ function move(currentFirefly){
 		let finalDiffZ = 0;
 		if (diffZ > 0){
 			finalDiffZ = Math.min(baseChange, diffZ);
-			// console.log("basechange: " + baseChange + ", diffz: " + diffZ);
 		}
 		else{
 			finalDiffZ = Math.max(-baseChange, diffZ);
 		}
 
+		currentFirefly.circle.remove();
 
 		currentFirefly.x += finalDiffX;
 		currentFirefly.y += finalDiffY;
 		currentFirefly.z += finalDiffZ;
+
+		if (currentFirefly.remove == true) return;
+
+		let groupZ = Math.floor(currentFirefly.z);
+		svg.getElementById("group-" + groupZ).append(currentFirefly.circle);
 
 		currentFirefly.circle.setAttributeNS(null, "cx", currentFirefly.x);
 		currentFirefly.circle.setAttributeNS(null, "cy", currentFirefly.y);
@@ -215,7 +226,7 @@ function move(currentFirefly){
 		else{
 			currentFirefly.circle.setAttributeNS(null, "r", currentFirefly.radius*2/(currentFirefly.z));
 		}
-		// console.log("z: " + currentFirefly.z + ", radius: " + currentFirefly.radius/currentFirefly.z + ", " + finalDiffZ);
+		currentFirefly.circle.setAttributeNS(null, "z-index", 20-currentFirefly.z);
 	}
 
 
@@ -248,24 +259,21 @@ function isBlocked(f1, f2, x, y){
 
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
-	// console.log("waiting.... " + currentFirefly.waitTime);
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
-	console.log("Waiting: " + currentFirefly.waitTime + " seconds remaining");
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
-		if (currentFirefly.neighborFlash == true) console.log("early flash!!!!");
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;
-		console.log("go flash!");
 		currentFirefly.flash();
 	}
 	currentFirefly.waitTime -= 1;
 }
 
 let isObst = false;
+let isPlacement = false;
 
 function obstBool(){
 	isObst = true;
-	console.log("boolean!!!!!");
+	document.getElementById("obstacle-explain").innerHTML = "Now click where you want the obstacle to be!";
 }
 
 let obstCounter = 0;
@@ -290,6 +298,7 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		console.log(obstCounter);
 		isObst = false;
 		obstCounter++;
+		document.getElementById("obstacle-explain").innerHTML = "";
 		//ID top of barrier obj - dstinguish case where barrier is btwn them from when it isn't
 		//isBlocked(ff coords, barrier top coords) - to tell if distance btwn fireflies is disrupted by object)
 		
@@ -305,18 +314,35 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		// } <- ARREGLA ESTO PARA Q FUNCIONE ISBLOCKED
 	}
 
+	if(isPlacement){
+		spawnCircle.setAttributeNS(null, "cx", x);
+		spawnCircle.setAttributeNS(null, "cy", y);
+		text.setAttributeNS(null, "x", x-47);
+		text.setAttributeNS(null, "y", y);
+	}
 });
 
 function setMorning(){
 	document.getElementById("firefly-visual").style.backgroundColor = "aliceblue";
 	firefliesFlash = false;
 	document.getElementById("current-time").innerHTML = "Current Time: Morning";
+	updates.innerHTML = "Daytime, no flashing";
+	document.getElementById("morning").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("midday").setAttribute("style", "border:0px");
+	document.getElementById("night").setAttribute("style", "border:0px");
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-morning");
+
 }
 
 function setMidday(){
 	document.getElementById("firefly-visual").style.backgroundColor = "#87ceeb";
 	firefliesFlash = false;
 	document.getElementById("current-time").innerHTML = "Current Time: Midday";
+	updates.innerHTML = "Daytime, no flashing";
+	document.getElementById("midday").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("morning").setAttribute("style", "border:0px");
+	document.getElementById("night").setAttribute("style", "border:0px");
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-midday");
 }
 
 function setNight(){
@@ -326,6 +352,12 @@ function setNight(){
 	for (let i=0; i<fireflies.length; i++){
 		nextFlash(fireflies[i]);
 	}
+	updates.innerHTML = "No fireflies yet";
+	document.getElementById("night").setAttribute("style", "border:5px solid #fca4e1");
+	document.getElementById("midday").setAttribute("style", "border:0px");
+	document.getElementById("morning").setAttribute("style", "border:0px");
+	document.getElementsByClassName("arrow")[0].setAttribute("id", "arrow-night");
+
 }
 
 //returns random int in the interval [start, end)
@@ -344,9 +376,19 @@ function addFireflies(){
 	const height = rect.height;
 
 	for (let i=0; i<fireflyAmount; i++){
-		let x = randRange(3, width);
-		let y = randRange(3, height);
+		let x = 0;
+		let y = 0;
+		if (isPlacement){
+			x = Math.floor(spawnCircle.getAttributeNS(null, "cx"));
+			y = Math.floor(spawnCircle.getAttributeNS(null, "cy"));
+		}
+		else{
+			x = randRange(3, width);
+			y = randRange(3, height);
+		}
+
 		let z = randRange(1, 20);
+
 		let newFirefly = new Firefly(x, y, z, svg, fireflies.length)
 		fireflies.push(newFirefly);
 		newFirefly.flash();
@@ -360,11 +402,14 @@ function addFireflies(){
 function removeFireflies(){
 
 	let fireflyAmount = document.getElementById("amount").value;
+	fireflyAmount = Math.min(fireflies.length, fireflyAmount);
 
 	for (let i=0; i<fireflyAmount; i++){
-		let pos = randRange(0, fireflies.length);
-		let toDelete = fireflies.splice(pos, 1);
-		toDelete[0].circle.remove();
+		let toDelete = fireflies[fireflies.length-1];
+		toDelete.remove = true;
+
+		toDelete.circle.remove();
+		fireflies.pop();
 		if (fireflies.length == 0) return;
 	}
 
@@ -379,6 +424,17 @@ function setFireflyID(firflies){
 
 function drawFireflies(){
 	const svg = document.querySelector("#firefly-visual");
+
+	for (let i=21; i>0; i--){
+		let curGroup = document.createElementNS(SVG_NS, "g");
+		curGroup.setAttributeNS(null, "id", "group-" + i);
+		svg.appendChild(curGroup);
+	}
+
+	createSpawnCircle(svg);
+	document.getElementById("placement").checked = false;
+
+	// svg.getElementById("group-5").remove();
 }
 
 function newLocation(){
@@ -408,3 +464,49 @@ document.getElementById("speed").addEventListener('input', function (evt) {
 document.getElementById("radius").addEventListener('input', function (evt) {
     synchronizationRadius = this.value;
 });
+
+
+let spawnCircle = document.createElementNS(SVG_NS, "circle");
+let text = document.createElementNS(SVG_NS, "text");
+
+function createSpawnCircle(svg){
+	spawnCircle.setAttributeNS(null, "fill", "#000");
+	svg.append(spawnCircle);
+	svg.append(text);
+}
+
+
+
+document.getElementById("placement").addEventListener("input", function(e){
+	isPlacement = document.getElementById("placement").checked;
+	const svg = document.querySelector("#firefly-visual");
+
+	if (!isPlacement){
+		spawnCircle.setAttributeNS(null, "fill-opacity", 0);
+		document.getElementById("placement-explain").innerHTML = "";
+	}
+	else{
+		const rect = svg.getBoundingClientRect();
+		const x = rect.width/2;
+		const y = rect.height/2;
+	    
+		// set center
+		spawnCircle.setAttributeNS(null, "cx", x);
+		spawnCircle.setAttributeNS(null, "cy", y);
+		spawnCircle.setAttributeNS(null, "r", 50);
+		spawnCircle.setAttributeNS(null, "fill-opacity", 100);
+
+		text.setAttributeNS(null, "x", x-47);
+		text.setAttributeNS(null, "y", y);
+		text.setAttributeNS(null,"font-size","14");
+		text.setAttributeNS(null, "fill", "#FFFFFF");
+		text.innerHTML = "Spawn Circle";
+
+
+		document.getElementById("placement-explain").innerHTML = "Click where you want the fireflies to spawn!";
+	}
+	
+	
+});
+
+

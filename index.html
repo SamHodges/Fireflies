@@ -42,7 +42,7 @@
 		<button id="midday" onClick="setMidday()"></button>
 		<div id="clock-group">
 			<button id="morning" onClick="setMorning()"></button>
-			<div id="clock"></div>
+			<div id="clock"><img src="arrow.png" id="arrow-midday" class="arrow"></div>
 			<button id="night" onClick="setNight()"></button>
 		</div>
 		<p id="current-time">Current Time: Morning</p>
@@ -71,9 +71,11 @@
   		</div>
 
   		<div class="inputs">
-  			<label for="radius">Choose placement?</label>
-  			<input type="checkbox" id="radius" name="radius">
+  			<label for="placement">Choose placement?</label>
+  			<input type="checkbox" id="placement" name="radius">
   		</div>
+
+  		<p id="placement-explain"></p>
   		
 	</div>
 
@@ -81,8 +83,9 @@
 		<h2>Obstacles</h2>
 		<div>
 			<button id="obstacle" class="round-buttons" onClick="obstBool()">+</button>
-			<button id="removeFireflies" class="round-buttons" onClick="removeFireflies()">-</button>
+			<button id="removeObstacle" class="round-buttons">-</button>
 		</div>
+		<p id="obstacle-explain"></p>
 	</div>
 
 	<div class="background">
@@ -90,6 +93,10 @@
 		<source src="https://dl.dropbox.com/s/ibaooslzn9fon2d/Fireflies.mp3" type="audio/mpeg">
 		Your browser does not support the audio element.
 	</audio>
+	</div>
+
+	<div class="background">
+		<p><a href="exposition.html">To learn more, click here</a></p>
 	</div>
 	
 </html>

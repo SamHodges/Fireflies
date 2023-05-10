@@ -30,8 +30,6 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 - maybe have movement as a rand num choice between 0 and current movement?
 
-- make example firefly clearer in what it is
-
 */
 
 /*IT IS TIME TO GET ENVIRONMENTALLY FUNKY*/
@@ -314,7 +312,7 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		// } <- ARREGLA ESTO PARA Q FUNCIONE ISBLOCKED
 	}
 
-	if(isPlacement){
+	else if(isPlacement){
 		spawnCircle.setAttributeNS(null, "cx", x);
 		spawnCircle.setAttributeNS(null, "cy", y);
 		text.setAttributeNS(null, "x", x-47);

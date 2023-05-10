@@ -238,11 +238,11 @@ function mainFlash(currentFirefly){
 	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
 }
 
-function isBlocked(f1, f2, x, y){
-	f1X = f1.x;
-	f1Y = f1.y;
-	f2X = f2.x;
-	f2Y = f2.y;
+function isBlocked(f1, x, y){
+	f1X = f1.cx;
+	f1Y = f1.cy;
+	f2X = f1.x + document.getElementsByTagName(circle).getAttributeNS("SVG_NS", "r");
+	f2Y = f1.y + document.getElementsByTagName(circle).getAttributeNS("SVG_NS", "r");
 	x = document.getElementById("obstacle").x;
 	y = document.getElementById("obstacle").y;
 	let line = document.createElementNS(SVG_NS, 'line');
@@ -253,13 +253,19 @@ function isBlocked(f1, f2, x, y){
 
 	if( line.x1 <= x <= line.x2 && line.y1 <= y <= line.y2){
 		f1.neighborFlash == false;
-		f2.neighborFlash == false;
+		//f2.neighborFlash == false;
 	}
+	return f1.neighborFlash;
 }
 
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
+	
+	if(isBlocked(currentFirefly.fireflyID, document.getElementById("obstacle").getAttributeNS("SVG_NS", "x"), document.getElementById("obstacle").getAttributeNS("SVG_NS", "y"))){
+		currentFirefly.neighborFlash == false;
+	}
+	
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;

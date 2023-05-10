@@ -89,6 +89,7 @@ function Firefly(startX, startY, startZ, svg, id){
 				}
 				
 			}
+
 			this.flashing = true;
 			this.circle.setAttributeNS(null, "r", (this.radius*2)/startZ);
 			this.circle.setAttributeNS(null, "fill", "#FFFF00");
@@ -226,6 +227,25 @@ function mainFlash(currentFirefly){
 	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
 }
 
+function isBlocked(f1, f2, x, y){
+	f1X = f1.x;
+	f1Y = f1.y;
+	f2X = f2.x;
+	f2Y = f2.y;
+	x = document.getElementById("obstacle").x;
+	y = document.getElementById("obstacle").y;
+	let line = document.createElementNS(SVG_NS, 'line');
+	line.createAttributeNS("x1", f1X);
+	line.createAttributeNS("y1", f1Y);
+	line.createAttributeNS("x2", f2X);
+	line.createAttributeNS("y2", f2Y);
+
+	if( line.x1 <= x <= line.x2 && line.y1 <= y <= line.y2){
+		f1.neighborFlash == false;
+		f2.neighborFlash == false;
+	}
+}
+
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
 	// console.log("waiting.... " + currentFirefly.waitTime);
@@ -248,6 +268,7 @@ function obstBool(){
 	console.log("boolean!!!!!");
 }
 
+let obstCounter = 0;
 document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 	const svg = document.querySelector("#firefly-visual");
 	const rect = svg.getBoundingClientRect();
@@ -259,13 +280,16 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 	if(isObst == true){
 		obst = document.createElementNS(SVG_NS, 'rect');
 		obst.setAttribute("width", "10");
-		obst.setAttribute("height", "500");
+		obst.setAttribute("height", "800");
 		obst.setAttribute("y", y);
 		obst.setAttribute("x", "" + x);
 		obst.style.fill = "green";
 		svg.appendChild(obst);
+		obst.setAttribute("id", "obstacle");
 		console.log("appending!");
+		console.log(obstCounter);
 		isObst = false;
+		obstCounter++;
 		//ID top of barrier obj - dstinguish case where barrier is btwn them from when it isn't
 		//isBlocked(ff coords, barrier top coords) - to tell if distance btwn fireflies is disrupted by object)
 		
@@ -275,7 +299,12 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 
 		//IN ADDITION: STORE BARRIER OBJ? when computing the upd8s for each firefly need to upd8 that to CHECK if barrier exists btwn fireflies.
 		//internal rep of barrier, external function- change upd8 function so it incorps barrier 
+		
+		// if(obst != null){
+		// 	obstCounter++;
+		// } <- ARREGLA ESTO PARA Q FUNCIONE ISBLOCKED
 	}
+
 });
 
 function setMorning(){

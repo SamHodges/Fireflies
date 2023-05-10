@@ -9,7 +9,6 @@ maybe include videos? -- Laura
 The user should learn something technical through a combination reading the text and interacting with visual elements. 
 Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Laura
 
-- make sure all debugging messages are deleted -- only in Laura's code now
 
 -----------------------------------------
 
@@ -369,9 +368,9 @@ function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
 	
-	if(isBlocked(currentFirefly.fireflyID, document.getElementById("obstacle").getAttributeNS("SVG_NS", "x"), document.getElementById("obstacle").getAttributeNS("SVG_NS", "y")) == false){
-		currentFirefly.neighborFlash == false;
-	}
+	// if(isBlocked(currentFirefly.fireflyID, document.getElementById("obstacle").getAttributeNS("SVG_NS", "x"), document.getElementById("obstacle").getAttributeNS("SVG_NS", "y")) == false){
+	// 	currentFirefly.neighborFlash == false;
+	// }
 	
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
 		clearInterval(currentFirefly.waitInterval);

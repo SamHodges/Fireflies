@@ -585,7 +585,8 @@ spawnCheck.addEventListener("input", function(e){
 	// if unchecked, make it invisible
 	if (!isPlacement){
 		spawnCircle.setAttributeNS(null, "fill-opacity", 0);
-		document.getElementById("placement-explain").innerHTML = "";
+		explainSpawn.innerHTML = "";
+		text.innerHTML = "";
 	}
 
 	// if checked, visible time!

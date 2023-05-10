@@ -19,6 +19,8 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 */
 //--------------------------------------------------Initialize--------------------------------------------------
+import { Gradient } from "javascript-color-gradient";
+
 // initialize firefly array
 let fireflies = [];
 
@@ -524,6 +526,7 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 function setMorning(){
 	// change background color
 	svg.style.backgroundColor = "aliceblue";
+	//svg.setColorGradient("#3F2CAF", "e9446a");
 
 	// fireflies don't flash in the morning
 	firefliesFlash = false;

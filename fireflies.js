@@ -13,8 +13,6 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 -----------------------------------------
 
-- merge some intervals so it's a bit more optimized lololol
-
 - make sidebar better at screen size changes (changing layout for when loaded on phone?)
 
 - maybe have movement as a rand num choice between 0 and current movement?
@@ -52,21 +50,38 @@ let baseSpeed = document.getElementById("speed").value; // firefly speed
 // other vars
 let obstCounter = 0; // number of obstacles
 let firefliesFlash = false; // whether fireflies flash
+let time = 0; // time tracker for counter
 
 // set initial text for example firefly 
 updates.innerHTML = "Daytime, no flashing";
 
-
-
-
 //--------------------------------------------------Fireflies--------------------------------------------------
+// counter for firefly movements
+function counter(){
+	// go through all the fireflies
+	for (let i=0; i<fireflies.length; i++){
+
+		// update firefly movement
+		let currentFirefly = fireflies[i];
+		move(currentFirefly);
+
+		// update firefly flashing
+		if (time % 1 < 0.025 && currentFirefly.waiting && firefliesFlash){
+			checkNeighbors(currentFirefly);
+		}
+	}
+
+	// time increases
+	time+=0.025;
+}
+
+
 // firefly object- represents a single firefly
 function Firefly(startX, startY, startZ, svg, id){
 
 	// set necessary vars
 	this.radius = 20; // radius of circle at z=1
 	this.fireflyID = id; // unique id to keep track of fireflies
-	this.waitInterval = null; // current interval for time tracking
 	this.x = startX; // x position
 	this.y = startY; // y position
 	this.z = startZ; // z position
@@ -76,6 +91,7 @@ function Firefly(startX, startY, startZ, svg, id){
 	this.recharging = false; // whether in recharging stage
 	this.flashing = false; // whether in flashing stage
 	this.remove = false; // whether they need to be deleted (stops the redraw during size changes)
+	this.waiting = false; // whether we're in waiting stage
 
 	// set firefly ID
 	this.setID = function(id){
@@ -107,6 +123,9 @@ function Firefly(startX, startY, startZ, svg, id){
 	
 	// controls firefly flashing + waiting
 	this.flash = function(){
+		// no longer waiting, instead flash stage
+		this.waiting = false;
+
 		// check if right time of day
 		if (firefliesFlash) {
 			// set current firefly so we can use intervals
@@ -191,33 +210,18 @@ function nextFlash(currentFirefly){
 	let maxTime = 10
 	currentFirefly.waitTime = Math.floor(Math.random() * maxTime); 
 
-	// wait for that amount of time, call flash again if hasn't been triggered by neighbor
-	mainFlash(currentFirefly);
+	// switch to waiting stage
+	currentFirefly.waiting = true;
 }
 
-// wait to flash again while checking neighbors, check in every second
-function mainFlash(currentFirefly){
-	currentFirefly.waitInterval = setInterval(checkNeighbors, 1000, currentFirefly);
-}
 
 // checks if neighbors have flashes and keeps track of wait
 function checkNeighbors(currentFirefly){
-	// if switched to day, clear interval and return
-	if (firefliesFlash == false){
-		clearInterval(currentFirefly.waitInterval);
-		currentFirefly.waitInterval = null;
-		return;
-	}
-
 	// update for example firefly
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
 
 	// if neighbors flash or they're done waiting, flash!
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
-		// stop interval
-		clearInterval(currentFirefly.waitInterval);
-		currentFirefly.waitInterval = null;
-
 		// call flash again
 		currentFirefly.flash();
 	}
@@ -322,11 +326,6 @@ function newLocation(){
     return [newHeight,newWidth, newZ];    
 }
 
-// call movement every 25 milliseconds
-function movementInterval(currentFirefly){
-	interval = setInterval(move, 25, currentFirefly);
-}
-
 
 // TODO: comment this when finished @Laura
 // checks if obstacle is blocking flash
@@ -396,7 +395,6 @@ function addFireflies(){
 		// make it start flashing and moving
 		newFirefly.flash();
 		newFirefly.moveEnd = newLocation();
-		movementInterval(newFirefly);
 	}
 }
 
@@ -630,4 +628,7 @@ function drawFireflies(){
 
 	// set spawning placement to false to start
 	document.getElementById("placement").checked = false;
+
+	// start firefly counter for movement
+	setInterval(counter, 25);
 }

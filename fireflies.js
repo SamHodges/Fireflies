@@ -332,44 +332,10 @@ function newLocation(){
     return [newHeight,newWidth, newZ];    
 }
 
-
-// TODO: comment this when finished @Laura
-// checks if obstacle is blocking flash
-function isBlocked(f1, x, y){
-	// set relevant variables
-	let f1X = f1.cx;
-	let f1Y = f1.cy;
-
-	// f2 coords - where f1's radius ends
-	let f2X = f1X + f1.document.getElementById("obstacle").getAttributeNS("SVG_NS", "r");
-	let f2Y = f1Y + f1.document.getElementById("obstacle").getAttributeNS("SVG_NS", "r");
-
-	//coordinates of given obstacle
-	x = document.getElementById("obstacle").x;
-	y = document.getElementById("obstacle").y;
-
-	//line drawn between center and edge of circle - if interrupted by obstacle, will not 
-	//register neighbors for flashing
-	let line = document.createElementNS(SVG_NS, 'line');
-	line.createAttributeNS("x1", f1X);
-	line.createAttributeNS("y1", f1Y);
-	line.createAttributeNS("x2", f2X);
-	line.createAttributeNS("y2", f2Y);
-
-	if( line.x1 <= x <= line.x2 && line.y1 <= y <= line.y2){
-		f1.neighborFlash == false;
-		//f2.neighborFlash == false;
-	}
-	return f1.neighborFlash;
-}
-
 function checkNeighbors(currentFirefly){
 	// check if neighbors flash, if they do
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
 	
-	// if(isBlocked(currentFirefly.fireflyID, document.getElementById("obstacle").getAttributeNS("SVG_NS", "x"), document.getElementById("obstacle").getAttributeNS("SVG_NS", "y")) == false){
-	// 	currentFirefly.neighborFlash == false;
-	// }
 	
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
 		clearInterval(currentFirefly.waitInterval);

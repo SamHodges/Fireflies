@@ -19,8 +19,6 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 - maybe have movement as a rand num choice between 0 and current movement?
 
-- when going from waiting in night to day, gets stuck on wait
-
 */
 //--------------------------------------------------Initialize--------------------------------------------------
 // initialize firefly array
@@ -169,7 +167,7 @@ function Firefly(startX, startY, startZ, svg, id){
 				currentFirefly.neighborFlash = false;
 
 				// update for example firefly
-				if (currentFirefly.fireflyID == 0) updates.innerHTML = "Recharging!";
+				if (currentFirefly.fireflyID == 0 && firefliesFlash) updates.innerHTML = "Recharging!";
 			}, 1000, currentFirefly);
 
 			// switch to recharging stage
@@ -204,13 +202,23 @@ function mainFlash(currentFirefly){
 
 // checks if neighbors have flashes and keeps track of wait
 function checkNeighbors(currentFirefly){
+	// if switched to day, clear interval and return
+	if (firefliesFlash == false){
+		clearInterval(currentFirefly.waitInterval);
+		currentFirefly.waitInterval = null;
+		return;
+	}
+
 	// update for example firefly
 	if (currentFirefly.fireflyID == 0) updates.innerHTML = "Waiting: " + currentFirefly.waitTime + " seconds remaining";
 
 	// if neighbors flash or they're done waiting, flash!
 	if (currentFirefly.waitTime <= 1 || currentFirefly.neighborFlash == true){
+		// stop interval
 		clearInterval(currentFirefly.waitInterval);
 		currentFirefly.waitInterval = null;
+
+		// call flash again
 		currentFirefly.flash();
 	}
 
@@ -520,7 +528,7 @@ function setMidday(){
 	userTime.innerHTML = "Current Time: Midday";
 
 	// update example firefly
-	updates.innerHTML = "Daytime, no flashing";
+	updates.innerHTML = "Daytime, no flashing";	
 
 	// update time buttons and arrow
 	middayButton.setAttribute("style", "border:5px solid #fca4e1");

@@ -20,8 +20,25 @@
 
 	<h1>Fireflies</h1>
 	<p>
-		Firefly synchronization has historically been completely misunderstood. Previously, researchers assumed fireflies had
-		an internal lighting clock, and would synchronize according to that. Now, we understand fireflies are more random and relational than previously understood. A firefly will flash randomly sometime between every 12 seconds to a few minutes, with no internal rhythm. However, they also flash when neighbors do (for the most part). As fireflies respond to their neighbors, they become more closely aligned due to them flashing as soon as they are able.
+		Out of the many different firefly species living across the world, certain fireflies have fascinated scientists and tourists alike with their synchronous 
+		flashing patterns. In several species of fireflies, mostly found in Southeast Asia and the Appalachians, male fireflies coordinate their flashing patterns with each other. 
+		This is thought to be a means to attract female mates to the correct species. See an example of such fireflies in this video
+		<a href="https://www.youtube.com/watch?v=0BOjTMkyfIA
+		">here!</a> 
+
+	</p>
+
+	<p>
+		When reading about fireflies, we realized they weren't really based on internal synchronization, but more on randomness and probability. 
+		Our implementation works in the same way — each firefly will recharge for 12 seconds (the minimum amount of time needed for fireflies to recharge physically), 
+		and then flash at some point within the next 1-10 seconds. Real fireflies will flash sometime within a few minutes, so the change is 
+		mostly just to speed up the visualization. When a firefly flashes, it alerts all its neighbors within a certain distance. The neighbors 
+		then flash for as long as they are able. Eventually, this causes the fireflies to synchronize, even without a synchronization equation.
+
+		All of our movement and flashing is handled using intervals. When a firefly flashes, it starts a countdown until it's recharged. 
+		For movement, a firefly will move a certain distance (baseSpeed) towards a random target every 25 milliseconds in order to achieve a smooth, 
+		motion-like effect. We also use a fair amount of event listeners to interface between the UI and our code.
+
 	</p>
 
 	<ol>

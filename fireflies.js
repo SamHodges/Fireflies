@@ -18,7 +18,6 @@ Examples/interactive demonstrations clearly illustrate concepts." -- rubric @Lau
 
 */
 //--------------------------------------------------Initialize--------------------------------------------------
-import { Gradient } from "javascript-color-gradient";
 
 // initialize firefly array
 let fireflies = [];

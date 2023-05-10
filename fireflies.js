@@ -466,8 +466,6 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 	
-	// TODO: delete this when done @Laura
-	console.log("click! click! click!");
 
 	// if placing obstacle, place it
 	if(isObst == true){
@@ -481,10 +479,6 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 		svg.appendChild(obst);
 		obst.setAttribute("id", "obstacle");
 
-		// TODO: delete log when done @Laura
-		console.log("appending!");
-		console.log(obstCounter);
-
 		// placement finished
 		isObst = false;
 
@@ -493,21 +487,6 @@ document.getElementById("firefly-visual").addEventListener("click", (event)=>{
 
 		// remove explanation
 		explainObst.innerHTML = "";
-		
-		// TODO: @Laura delete this when done
-		//ID top of barrier obj - dstinguish case where barrier is btwn them from when it isn't
-		//isBlocked(ff coords, barrier top coords) - to tell if distance btwn fireflies is disrupted by object)
-		
-		//addeventlistener 2 fv - always on, but only 
-		//does something when btn clicked - var isobstclicked 
-		//true WHEN clicked and set to false once rect drawn
-
-		//IN ADDITION: STORE BARRIER OBJ? when computing the upd8s for each firefly need to upd8 that to CHECK if barrier exists btwn fireflies.
-		//internal rep of barrier, external function- change upd8 function so it incorps barrier 
-		
-		// if(obst != null){
-		// 	obstCounter++;
-		// } <- ARREGLA ESTO PARA Q FUNCIONE ISBLOCKED
 	}
 
 	// place a spawn circle (prioritizes obstacle placement)
